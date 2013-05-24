@@ -1,15 +1,53 @@
 <?php
+// Require the Slim Framework
+require 'Slim/Slim.php';
+\Slim\Slim::registerAutoloader();
 
-require 'slim/Slim.php';
-require 'reactive/autoload.php';
-require 'helpers/development.php';
+// Include important reactive core files
+require 'reactive/core.php';
+require 'reactive/controller.php';
+require 'settings.php';
 
-$app = new \Reactive\Router;
+// Instantiate a new app
+$app = new \Slim\Slim($settings);
 
-$routes = array(
-	'/test/:one' => 'Something:awesome@get'
-);
- 
-$app->addRoutes($routes);
- 
+
+// ------------------------------
+// MIDDLEWARE
+// Add middleware to the application
+
+// $app->add(new \SomeMiddleWare());
+
+// END MIDDLEWARE
+// ------------------------------
+
+
+// ------------------------------
+// HOOKS
+// Add your hooks here
+
+// $app->hook('the.hook.name', function () use ($app) {
+//     // Do something
+// });
+
+// END HOOKS
+// ------------------------------
+
+
+// ------------------------------
+// ROUTES
+
+// Manual Routes
+// Include the list of manually set routes
+require_once 'routes.php';
+
+// Dynamic Routes
+// Auto-generate routes based on the URI
+generate_routes($app);
+
+// END ROUTES
+// ------------------------------
+
+
+// Run the application
 $app->run();

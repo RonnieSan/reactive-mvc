@@ -1,17 +1,28 @@
 <?php
 namespace Reactive;
 
-Class Controller extends \Slim\Slim
+Class Controller
 {
 
-	public function __construct() {
+	public $view;
 
-		// Load the settings file
-		$settings = require 'settings.php';
+	protected $app;
+	protected $args;
 
-		// Run the slim constructor
-		parent::__construct($settings);
+	public function __construct($app) {
+		$this->app = $app;
 
+		// Load the reactive view class
+		$this->view = new \Reactive\View($app);
+	}
+
+}
+
+Class Public_Controller extends Controller
+{
+
+	public function __construct($app) {
+		parent::__construct($app);
 	}
 
 }

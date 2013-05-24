@@ -154,7 +154,21 @@ class Slim
 
         if (file_exists($fileName)) {
             require $fileName;
+        } else {
+            // Get the base directory
+            $basedir = dirname(__DIR__);
+
+            // Build a path from the namespace
+            $path = strtolower(str_replace('\\', '/', $className));
+
+            if (file_exists("{$basedir}/{$path}.php")) {
+
+                // Autoload namespaced classes
+                require_once "{$basedir}/{$path}.php";
+
+            }
         }
+
     }
 
     /**

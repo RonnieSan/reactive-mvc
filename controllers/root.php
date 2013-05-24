@@ -1,17 +1,21 @@
 <?php
 namespace Controllers;
- 
-Class Root extends \Reactive\Controller
+
+Class Root extends \Reactive\Public_Controller
 {
 
-	// THe home page
+	public function __construct($app) {
+		parent::__construct($app);
+	}
+
+	// The home page
 	public function index()	{
-		$this->render('index.php', array('name' => 'Ronnie'));
+		echo 'This is the home page';
 	}
 
 	// The 404 error page
-	public function error404() {
-		echo 'Oops!  404 Error!';
+	static function error_404() {
+		echo 'Oops!';
 	}
 
 }
