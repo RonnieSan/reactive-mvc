@@ -10,8 +10,7 @@ Class Test extends \Reactive\Controller
 
 	// The home page
 	public function index()	{
-		echo '<pre>';
-		print_r(get_class_methods($this));
+		echo 'This is the test page.';
 	}
 
 	// The 404 error page

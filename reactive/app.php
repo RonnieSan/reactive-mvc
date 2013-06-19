@@ -10,11 +10,7 @@ Class App extends \Slim\Slim
         public $session;
         
         public function __construct($settings) {
-		parent::__construct($settings);
-        
-            //bootstrap the API
-            $this->api = \Integration\Api::bootstrap(\Icm_Config::fromIni('config/api_config.ini'));
-            $this->session = new \Icm_Session_Namespace($settings['session_namespace']);
+			parent::__construct($settings);
         }
 
 	// ------------------------------

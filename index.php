@@ -9,7 +9,7 @@ require 'reactive/controller.php';
 require 'settings.php';
 
 // Instantiate a new app
-$app = new \Slim\Slim($settings);
+$app = new \Reactive\App($settings);
 
 // ------------------------------
 // APP CONSTANTS
