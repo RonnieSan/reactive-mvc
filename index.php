@@ -4,12 +4,20 @@ require 'Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
 // Include important reactive core files
-require 'reactive/core.php';
+require 'reactive/helpers.php';
 require 'reactive/controller.php';
 require 'settings.php';
 
 // Instantiate a new app
 $app = new \Slim\Slim($settings);
+
+// ------------------------------
+// APP CONSTANTS
+
+define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+
+// END APP CONSTANTS
+// ------------------------------
 
 
 // ------------------------------
@@ -43,7 +51,7 @@ require_once 'routes.php';
 
 // Dynamic Routes
 // Auto-generate routes based on the URI
-generate_routes($app);
+$app->generate_routes($app);
 
 // END ROUTES
 // ------------------------------
