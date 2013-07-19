@@ -208,10 +208,7 @@ Class View extends \Slim\View
 
 	// Render a view file
 	public function render($template) {
-                
-            if(!isset($this->environment)){
-                $this->environment = new \Libraries\Environment($this->app);
-            }
+
 		// Get the template path
 		$templatePath = $this->getTemplatesDirectory() . '/' . ltrim($template, '/');
 		

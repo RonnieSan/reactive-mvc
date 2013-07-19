@@ -4,10 +4,17 @@ namespace Reactive;
 Class Model
 {
 
+	public $app;
 	public static $methods = array();
 
+	protected $_db;
+
 	function __construct() {
-		
+		$this->app = \Reactive\App::getInstance();
+
+		if ($this->app->db) {
+			$this->_db &= $this->app->db;
+		}
 	}
 	
 	// Register a new method

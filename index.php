@@ -1,4 +1,8 @@
 <?php
+// Start a session
+session_cache_limiter(false);
+session_start();
+
 // Require the Slim Framework
 require 'Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
@@ -6,10 +10,12 @@ require 'Slim/Slim.php';
 // Include important reactive core files
 require 'reactive/helpers.php';
 require 'reactive/controller.php';
-require 'settings.php';
+require 'config.php';
 
-// Instantiate a new app
-$app = new \Reactive\App($settings);
+// Instantiate a new app and register the Reactive autoloader
+$app = new \Reactive\App($config);
+$app->register_autoloader();
+
 
 // ------------------------------
 // APP CONSTANTS
