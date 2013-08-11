@@ -10,11 +10,11 @@ Class Model
 	protected $_db;
 
 	function __construct() {
+		// Get an instance of the App
 		$this->app = \Reactive\App::getInstance();
 
-		if ($this->app->db) {
-			$this->_db &= $this->app->db;
-		}
+		// Get a database connection
+		$this->_db = \Libraries\Database::getInstance();
 	}
 	
 	// Register a new method

@@ -53,7 +53,7 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
 // Manual Routes
 // Include the list of manually set routes
-require_once 'routes.php';
+require 'routes.php';
 
 // Dynamic Routes
 // Auto-generate routes based on the URI

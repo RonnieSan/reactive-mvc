@@ -19,10 +19,18 @@ Class Controller
 }
 
 // Extend this class for password-protected pages
-Class Private_Controller extends Controller{
+Class Private_Controller extends Controller
+{
 
 	public function __construct() {
 		parent::__construct();
+
+		// Authenticate the user
+		$user = new \Models\User();
+		if (!$user->validate_token()) {
+			$this->request->flash('error', 'You have been logged out.');
+			$this->app->redirect('/admin/login');
+		}
 	}
 
 }

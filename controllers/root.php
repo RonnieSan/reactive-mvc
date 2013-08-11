@@ -10,12 +10,7 @@ Class Root extends \Reactive\Public_Controller
 
 	// The home page
 	public function index()	{
-		echo 'This is the home page';
-	}
-
-	// The 404 error page
-	static function error_404() {
-		echo 'Oops!';
+		$this->app->render('home.php');
 	}
 
 }

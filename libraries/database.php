@@ -6,9 +6,11 @@ Class Database
 {
 
 	public $app;
+	public $name;
 	public $result;
 
 	protected $_db;
+	protected static $db = array();
 
 	// Instantiate the database class
 	public function __construct() {
@@ -16,36 +18,51 @@ Class Database
 		// Get an instance of the app
 		$this->app = \Reactive\App::getInstance();
 
+		// Get an instance of the database connection
+		if (is_null(static::getInstance())) {
+			$this->setName('default');
+		}
+
+	}
+
+	// Get an instance of the database
+	public static function getInstance($name = 'default') {
+		return isset(static::$db[$name]) ? static::$db[$name] : null;
+	}
+
+	// Set the name of the DB connection
+	public function setName($name) {
+		$this->name = $name;
+		static::$db[$name] = $this;
 	}
 
 	// Connect to the database
-	public function connect($host = NULL, $database = NULL, $username = NULL, $password = NULL) {
+	public function connect($host = NULL, $database = NULL, $username = NULL, $password = NULL, $type = 'mysql') {
+
+		// Get the settings from the config if nothing was passed in
+		if ($host === NULL) {
+			$host = $this->app->config('db.default');
+		}
 
 		// Set the DB options
 		if (is_array($host)) {
 			$dbConfig = $host;
-			$dbType   = $dbConfig['type'];
+			$type     = $dbConfig['type'];
 			$host     = $dbConfig['host'];
 			$database = $dbConfig['database'];
 			$username = $dbConfig['username'];
 			$password = $dbConfig['password'];
-		} else {
-			$dbType   = $this->app->config('db.type') ?: 'mysql';
-			$host     = $host ?: $this->app->config('db.host');
-			$database = $database ?: $this->app->config('db.database');
-			$username = $username ?: $this->app->config('db.username');
-			$password = $password ?: $this->app->config('db.password');
 		}
 
 		try {
 
 			// Create a database handle
-			switch ($dbType) {
+			switch ($type) {
 
 				// MSSQL, Sybase, DBLib
 				case 'mssql':
 				case 'sybase':
-					$this->_db = new \PDO("{$dbType}:host={$host};dbname={$database}, {$username}, {$password}");
+					$this->_db = new \PDO("{$type}:host={$host};dbname={$database}, {$username}, {$password}");
 					break;
 
 				case 'sqlite':
@@ -53,7 +70,7 @@ Class Database
 
 				// Default to MySQL
 				default:
-					$this->_db = new \PDO("{$dbType}:host={$host};dbname={$database}", $username, $password);
+					$this->_db = new \PDO("{$type}:host={$host};dbname={$database}", $username, $password);
 					break;
 
 			}
@@ -156,8 +173,6 @@ Class Database
 		array_walk($fields, function(&$value) {
 			$value = trim($value);
 		});
-
-		var_dump($values);
 
 		// Create the values portion for the queries
 		foreach ($fields as $field) {

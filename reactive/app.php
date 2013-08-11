@@ -14,10 +14,8 @@ Class App extends \Slim\Slim
 		parent::__construct($settings);
 
 		// Connect to the database
-		// if ($settings['db.default']) {
-		// 	$this->db = new \Libraries\Database();
-		// 	$this->db->connect();
-		// }
+		$this->db = new \Libraries\Database();
+		$this->db->connect();
 
 		// Set the 404 page
 		$this->notFound(function() {
@@ -151,6 +149,11 @@ Class App extends \Slim\Slim
 				break;
 			}
 
+			if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
+				$class = '\\Controllers\\' . $namespacedClass . '\\Root';
+				break;
+			}
+
 			// Remove the last item in the array and add it to the args array
 			$function = array_pop($namespacedURI);
 			$paramCount++;
@@ -212,7 +215,7 @@ Class App extends \Slim\Slim
 		$app = $this;
 
 		// Check for a method specific route
-		if (is_callable($class . "::{$function}_{$method}")) {
+		if (is_callable($class . "::{$function}__{$method}")) {
 			$this->{$method}($route, function($args = NULL) use ($app, $class, $function, $method) {
 				$controller = new $class($app);
 				call_func(array($controller, "{$function}__{$method}"), $args); // Uses a double underscore
@@ -232,6 +235,22 @@ Class App extends \Slim\Slim
 		}
 	}
 	// END ROUTING FUNCTIONS
+	// ------------------------------
+
+
+	// ------------------------------
+	// LOADER FUNCTIONS
+
+	// Load a helper file
+	public function load_helper($fileName) {
+
+		if (file_exists(ROOT . "/helpers/{$fileName}.php")) {
+			include(ROOT . "/helpers/{$fileName}.php");
+		}
+
+	}
+
+	// END LOADER FUNCTIONS
 	// ------------------------------
 
 }
