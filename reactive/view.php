@@ -66,36 +66,20 @@ Class View extends \Slim\View
 	// Add stylesheets to the _css array
 	public function add_css($css) {
 		
-		// Check if an array was passed in
-		if (is_array($css)) {
-			foreach ($css as $stylesheet) {
-				$this->_add_stylesheet($stylesheet);
-			}
+		// Wrap a string in an array
+		if (!is_array($css)) {
+			$css = array($css);
 		}
 
-		// Just add the single stylesheet
-		else {
-			$this->_add_stylesheet($css);
+		foreach ($css as $stylesheet) {
+			$this->_add_stylesheet($stylesheet);
 		}
 
 	}
 
 	// Add a stylesheet to the _css array
 	protected function _add_stylesheet($stylesheet) {
-		// If the file is relative...
-		if (!preg_match("~^(?:f|ht)tps?://~i", $stylesheet)) {
-
-			$stylesheet = str_replace('//', '/', $stylesheet);
-			if (is_file(ROOT . $stylesheet)) {
-				$this->_css[] = $stylesheet;
-			}
-
-		}
-
-		// Just add the absolute CSS file
-		else {
-			$this->_css[] = $stylesheet;
-		}
+		$this->_css[] = $stylesheet;
 	}
 
 	// Print out the HTML for the CSS links
@@ -119,40 +103,28 @@ Class View extends \Slim\View
 	
 	// Add a script to the _js array
 	public function add_js($js, $location = 'footer', $useTheme = TRUE) {
-		// Check if an array was passed in
-		if (is_array($js)) {
-			foreach ($js as $script) {
-				$this->_add_js($script, $location, $useTheme);
-			}
+		
+		// Wrap a string in an array
+		if (!is_array($js)) {
+			$js = array($js);	
 		}
 
-		// Just add the single stylesheet
-		else {
-			$this->_add_js($js, $location, $useTheme);
+		foreach ($js as $script) {
+			$this->_add_js($script, $location, $useTheme);
 		}
 	}
 
 	// Add a script to the _js array
 	protected function _add_js($script, $location = 'footer', $useTheme = TRUE) {
-		// If the file is relative...
-		if (!preg_match("~^(?:f|ht)tps?://~i", $script)) {
-
-			// Check if you need to set a theme based on the variation
-			if ($useTheme) {
-				$script = "/assets/themes/{$this->params['theme']}/js/{$script}";
-			}
-			$script = str_replace('//', '/', $script);
-
-			if (is_file(ROOT . $script)) {
-				$this->_js[$location][] = $script;
-			}
-
+		
+		// Check if you need to set a theme based on the variation
+		if ($useTheme) {
+			$script = "/assets/themes/{$this->params['theme']}/js/{$script}";
 		}
+		$script = str_replace('//', '/', $script);
 
-		// Just add the absolute CSS file
-		else {
-			$this->_js[$location][] = $script;
-		}
+		$this->_js[$location][] = $script;
+		
 	}
 
 	// Print the script tags for the JS files
@@ -172,13 +144,17 @@ Class View extends \Slim\View
 	// Param methods
 
 	// Set the params for the view
-	public function set_params($key, $value = NULL) {
+	public function set_params($key, $value = NULL, $default = NULL) {
 		if (is_array($key)) {
 			foreach($key as $k => $v){
 				$this->params[$k] = $v;
 			}
 		} else {
-			$this->params[$key] = $value;
+			if ($value !== NULL) {
+				$this->params[$key] = $value;
+			} else {
+				$this->params[$key] = $default;
+			}
 		}
 	}
 

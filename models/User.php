@@ -112,4 +112,12 @@ Class User extends \Reactive\Model
 		return TRUE;
 
 	}
+
+	// Log the user out
+	public function logout() {
+		unset($_SESSION['userID']);
+
+		$this->token = NULL;
+		$this->save();
+	}
 }

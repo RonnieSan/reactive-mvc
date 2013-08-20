@@ -1,0 +1,171 @@
+// -------------------------
+// MIXINS
+// -------------------------
+
+// Clip the background - useful for rounded corners
+.background-clip(@argument: padding-box) {
+        -moz-background-clip: @argument;
+        -webkit-background-clip: @argument;
+        background-clip: @argument;
+}
+ 
+// Change the box-sizing of an element to border-box
+.border-box {
+        -ms-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+}
+ 
+// Arbitrary rounded corners
+.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+        -webkit-border-top-right-radius: @topright;
+        -webkit-border-bottom-right-radius: @bottomright;
+        -webkit-border-bottom-left-radius: @bottomleft;
+        -webkit-border-top-left-radius: @topleft;
+        -moz-border-radius-topright: @topright;
+        -moz-border-radius-bottomright: @bottomright;
+        -moz-border-radius-bottomleft: @bottomleft;
+        -moz-border-radius-topleft: @topleft;
+        border-top-right-radius: @topright;
+        border-bottom-right-radius: @bottomright;
+        border-bottom-left-radius: @bottomleft;
+        border-top-left-radius: @topleft;
+        .background-clip(padding-box);
+}
+ 
+// Create arbitrary colored 1px border
+.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
+        border-top: solid 1px @top-color;
+        border-left: solid 1px @left-color;
+        border-right: solid 1px @right-color;
+        border-bottom: solid 1px @bottom-color;
+}
+ 
+// Cross-browser box shadows
+.box-shadow(@arguments) {
+        -webkit-box-shadow: @arguments;
+        -moz-box-shadow: @arguments;
+        box-shadow: @arguments;
+}
+ 
+.clear-both {
+        clear: both;
+}
+ 
+.clearfix() {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
+ 
+// Cross-browser drop shadows
+.drop-shadow(@rguments: 0 2px 5px rgba(0, 0, 0, 0.25)) {
+        -webkit-box-shadow: @arguments;
+        -moz-box-shadow: @arguments;
+        box-shadow: @arguments;
+}
+
+// Cross browser drop shadows (black)
+.drop-shadow-black(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+        -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+        -moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+        box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+}
+ 
+// Simple vertical gradient
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+        background: @color;
+        background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
+        background: -ms-linear-gradient(bottom, @start, @stop);
+        background: -moz-linear-gradient(center bottom, @start 0%, @stop 100%);
+        background: -o-linear-gradient(@stop, @start);
+        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)", @stop, @start));
+}
+ 
+// Simple black and white vertical gradient
+.gradient-bw(@color: #F5F5F5, @start: 0, @stop: 255) {
+        background: @color;
+        background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(@start, @start, @start)), color-stop(1, rgb(@stop, @stop, @stop)));
+        background: -ms-linear-gradient(bottom, rgb(@start,@start,@start) 0%, rgb(@stop,@stop,@stop) 100%);
+        background: -moz-linear-gradient(center bottom, rgb(@start,@start,@start) 0%, rgb(@stop,@stop,@stop) 100%);
+        background: -o-linear-gradient(rgb(@stop,@stop,@stop), rgb(@start,@start,@start));
+        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",rgb(@stop,@stop,@stop),rgb(@start,@start,@start)));
+}
+
+// Inline-block styling for IE compatability
+.inline-block {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+}
+ 
+// Cross-browser inner shadows
+.inner-shadow(@horizontal: 0, @vertical: 1px, @blur: 2px, @alpha: 0.4) {
+        -webkit-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+        -moz-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+        box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+ 
+// Remove the appearance of certain form elements in Mozilla and Webkit
+.no-appearance {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+}
+
+// Hide an object
+.none {
+    display: none !important;
+}
+ 
+// Cross-browser opacity
+.opacity(@opacity: 0.5) {
+        -moz-opacity: @opacity;
+        -khtml-opacity: @opacity;
+        -webkit-opacity: @opacity;
+        opacity: @opacity;
+        @opperc: @opacity * 100;
+        -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+        filter: ~"alpha(opacity=@{opperc})";
+}
+ 
+// Cross-browser transparent backgrounds
+.rgba(@colour, @alpha) {
+    @alphaColour: hsla(hue(@colour), saturation(@colour), lightness(@colour), @alpha);
+    @ieAlphaColour: argb(@alphaColour);
+     
+    background-color: @colour; // Fallback for older browsers
+    background-color: @alphaColour;
+     
+    // IE hacks
+    zoom: 1; // hasLayout
+    background-color: transparent\9;
+    -ms-filter:  "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 8+
+        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 6 & 7    
+}
+ 
+// Uniform rounded corners
+.rounded(@radius: 2px) {
+        -webkit-border-radius: @radius;
+        -moz-border-radius: @radius;
+        border-radius: @radius;
+}
+ 
+// Simple sprite styles
+.sprite(@src, @left, @top, @width, @height) {
+        background-image: url(@src);
+        background-position: -@left -@top;
+        display: block;
+        height: @height;
+        text-indent: -9999px;
+        width: @width;
+}
+

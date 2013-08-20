@@ -1,0 +1,66 @@
+@import "../../../reboot/less/reboot";
+
+// --------------------------------------------------
+// DASHBOARD STYLES
+
+* {
+	.border-box;
+}
+
+.wrapper {
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+
+section#header {
+	background-color: #000;
+	display: table-row;
+	height: 50px;
+
+	.logo {
+		display: table-cell;
+	}
+
+	.utility-nav {
+
+		nav {
+			float: right;
+			height: 50px;
+			line-height: 50px;
+			padding: 0 20px;
+
+			a {
+				color: #FFF;
+			}
+		}
+
+	}
+}
+
+section#main {
+	display: table-row;
+
+	div#menu {
+		background-color: #555;
+		color: #FFF;
+		display: table-cell;
+		height: 100%;
+		width: 250px;
+
+		li {
+			line-height: 30px;
+			min-height: 30px;
+			padding: 0 20px;
+		}
+	}
+
+	div#content {
+		display: table-cell;
+		padding: 20px;
+	}
+
+}
+
+// END DASHBOARD STYLES
+// --------------------------------------------------

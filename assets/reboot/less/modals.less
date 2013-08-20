@@ -1,0 +1,59 @@
+// -------------------------
+// MODALS
+// -------------------------
+
+.modal-overlay {
+	.opacity(0.85);
+	background-color: #000;
+	display: none;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+.modal-container {
+	background-color: transparent !important;
+	display: none;
+	height: 100%;
+	left: 0;
+	overflow: auto;
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+.modal {
+	margin: 0 auto;
+	max-width: 95%;
+
+	> header {
+		background-color: @modalHeaderBkg;
+		height: 50px;
+
+		h2 {
+			color: @modalHeaderText;
+			line-height: 50px;
+			padding: 0 20px;
+		}
+	}
+
+	> .content {
+		background-color: #FFF;
+		padding: 20px;
+	}
+
+}
+
+@media (max-width: 959px) {
+	.modal {
+		max-width: 750px;
+	}
+}
+
+@media (max-width: 699px) {
+	.modal {
+		max-width: 310px;
+	}
+}

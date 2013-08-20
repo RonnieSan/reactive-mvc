@@ -28,8 +28,9 @@ Class Private_Controller extends Controller
 		// Authenticate the user
 		$user = new \Models\User();
 		if (!$user->validate_token()) {
-			$this->request->flash('error', 'You have been logged out.');
-			$this->app->redirect('/admin/login');
+			$this->app->redirect('/admin/user/login');
+		} else {
+			$this->app->user = $user;
 		}
 	}
 

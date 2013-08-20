@@ -1,0 +1,157 @@
+// -------------------------
+// GRID SYSTEM
+// -------------------------
+
+
+.clearfix() {
+	clear: both;
+}
+
+.fixed-grid(@columns: 3, @innerGutter: 40px, @outerGutter: 20px, @width: 1200px) {
+
+	@columnWidth: round((@width - (@innerGutter * (@columns - 1)) - (@outerGutter * 2)) / @columns);
+
+	.row {
+		.clearfix();
+		padding: 0 @outerGutter;
+	}
+
+	.column {
+		float: left;
+		margin-left: @innerGutter;
+		width: @columnWidth;
+
+		&:first-child {
+			margin-left: 0;
+		}
+	}
+
+	// Loop through and create all the span and offset widths
+	.createSpans (@index) when (@index < (@columns + 1)) {
+
+		.span-@{index} {
+			width: (@index * @columnWidth) + (@innerGutter * (@index - 1));
+		}
+
+		.offset-@{index} {
+			margin-left: (@index * @columnWidth) + (@innerGutter * (@index - 1));
+		}
+
+		.createSpans (@index + 1);
+
+	}
+	.createSpans (1);
+
+	// Change the column widths for wide mobile
+	@media (max-width: (@snapTablet - 1)) {
+
+		@columnWidth: 320px;
+
+		.row {
+			padding: 0;
+		}
+
+		.column,
+		.responsive {
+			margin-left: 0;
+			width: @columnWidth !important;
+		}
+
+	}
+
+}
+
+// Create a fluid grid with fixed margins
+.fluid-grid(@columns: 12, @gutterWidth: 40px) {
+
+	// Get the column width
+	@columnWidth: round(100 / @columns, 3) * 1%;
+
+	.row {
+		.clearfix();
+	}
+
+	.column {
+		float: left;
+		width: @columnWidth;
+
+		.inner {
+			padding-left: @gutterWidth / 2;
+			padding-right: @gutterWidth / 2;
+		}
+	}
+
+	// Loop through and create all the span and offset widths
+	.createSpans (@index) when (@index < (@columns + 1)) {
+
+		.span-@{index} {
+			width: round(@index * @columnWidth, 4) * 1%;
+		}
+
+		.offset-@{index} {
+			margin-left: round(@index * @columnWidth, 3) * 1%;
+		}
+
+		.createSpans (@index + 1);
+
+	}
+	.createSpans (1);
+
+	// Change the column widths for wide mobile
+	@media (max-width: (@snapTablet - 1)) {
+
+		.column,
+		.responsive {
+			width: 100%;
+		}
+
+		// Any column that is less than half the width becomes half width
+		.createSpans (@index) when (@index < (@columns - 1)) and (mod(@columns, 2) < 1) {
+
+			.span-@{index} {
+				width: 50%;
+			}
+
+			.offset-@{index} {
+				margin-left: 50%;
+			}
+
+			.createSpans (@index + 1);
+
+		}
+		.createSpans (1);
+
+		.span-@{columns} {
+			clear: both;
+			width: 100%;
+		}
+
+	}
+
+	// Change the column widths for portrait mobile
+	@media (max-width: (@snapMobile - 1)) {
+
+		.column,
+		.responsive {
+			clear: both;
+			width: 100%;
+		}
+
+		// Make all columns 100% with no offset
+		.createSpans (@index) when (@index < (@columns + 1)) {
+
+			.span-@{index} {
+				width: 100%;
+			}
+
+			.offset-@{index} {
+				margin-left: 0;
+			}
+
+			.createSpans (@index + 1);
+
+		}
+		.createSpans (1);
+
+	}
+}

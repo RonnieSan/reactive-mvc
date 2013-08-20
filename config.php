@@ -2,11 +2,11 @@
  
 $config = array(
 	
-	'view'           => new \Reactive\View(),  // Use the Reactive view class
+	'view'           => new \Reactive\View(),       // Use the Reactive view class
 
-	'class.root'     => 'Root',                // What controller class will be used for the root
-	'templates.path' => 'views',               // What folder has all the views
-	'404.template'   => '404.php',             // Path to the view to use as a 404 page
+	'class.root'     => 'Root',                     // What controller class will be used for the root
+	'templates.path' => 'views',                    // What folder has all the views
+	'404.template'   => '404.php',                  // Path to the view to use as a 404 page
 
 	'db.default' => array(
 			'host'        => 'localhost',           // Host address for the database

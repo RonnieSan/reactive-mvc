@@ -78,25 +78,25 @@ Class App extends \Slim\Slim
 
 		// Check if the unaltered file exists
 		if (file_exists($filePath . $className . '.php')) {
-			require $filePath . $className . '.php';
+			require_once $filePath . $className . '.php';
 			return;
 		}
 
 		// Check if the dashed file exists
 		if (file_exists($filePath . str_replace('_', '-', $className) . '.php')) {
-			require $filePath . str_replace('_', '-', $className) . '.php';
+			require_once $filePath . str_replace('_', '-', $className) . '.php';
 			return;
 		}
 
 		// Check if the lowercase file exists
 		if (file_exists($filePath . strtolower($className) . '.php')) {
-			require $filePath . strtolower($className) . '.php';
+			require_once $filePath . strtolower($className) . '.php';
 			return;
 		}
 
 		// Check if the lowercase file with dashes exists
 		if (file_exists($filePath . str_replace('_', '-', strtolower($className)) . '.php')) {
-			require $filePath . str_replace('_', '-', strtolower($className)) . '.php';
+			require_once $filePath . str_replace('_', '-', strtolower($className)) . '.php';
 			return;
 		}
 
@@ -135,7 +135,7 @@ Class App extends \Slim\Slim
 
 		// Use the root class unless something else matches
 		$class      = '\\Controllers\\' . $this->config('class.root');
-		$function   = '';
+		$function   = 'index';
 		$paramCount = 0;
 		$argString  = '';
 
@@ -144,21 +144,31 @@ Class App extends \Slim\Slim
 
 			// Check if the class exists
 			$namespacedClass = implode('\\', $namespacedURI);
+
 			if (class_exists('\\Controllers\\' . $namespacedClass)) {
 				$class = '\\Controllers\\' . $namespacedClass;
-				break;
+				if ($this->_check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
+					break;
+				}
 			}
 
 			if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
 				$class = '\\Controllers\\' . $namespacedClass . '\\Root';
-				break;
+				if ($this->_check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
+					break;
+				}
 			}
 
 			// Remove the last item in the array and add it to the args array
 			$function = array_pop($namespacedURI);
 			$paramCount++;
+
 		}
 
+	}
+
+	// Check if a method exists and if the number of params matches
+	private function _check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method) {
 		// Check if the first argument is a callable method
 		if (method_exists($class, $function)) {
 			
@@ -168,46 +178,30 @@ Class App extends \Slim\Slim
 			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
 			$paramCount--;
 
-			// Add args if the count matches
-			if ($numberOfParams > 0 && $paramCount >= $numberOfReqParams && $paramCount <= $numberOfParams) {
-				$argString = '(:args+)';
+			$routeArray = array_slice($uriValues, 0, count($namespacedURI) + 1);
+			$route = '/' . implode('/', $routeArray) . '(/)';
+
+			// Check if there are params
+			if ($numberOfParams > 0) {
+				
+				// Check if it has the number of required params
+				if ($paramCount >= $numberOfReqParams && $paramCount <= $numberOfParams) {
+
+					// Create the route
+					$route .= '(:args+)';
+					$this->create_route($route, $class, $function, $method);
+					return TRUE;
+
+				}
+
+			} else {
+
+				// Create the route
+				$this->create_route($route, $class, $function, $method);
+				return TRUE;
+
 			}
-
-			// Create the route
-			$routeArray    = array_slice($uriValues, 0, count($namespacedURI) + 1);
-			$route         = '/' . implode('/', $routeArray) . '(/)' . $argString;
-
-		} else {
-
-			// Set the method as index
-			$function = 'index';
-
-			// Check if the method accepts parameters
-			$reflection        = new \ReflectionMethod($class, $function);
-			$numberOfParams    = $reflection->getNumberOfParameters();
-			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
-
-			// Add args if the count matches
-			if ($numberOfParams > 0 && $paramCount >= $numberOfReqParams && $paramCount <= $numberOfParams) {
-				$argString = '(:args+)';
-			}
-
-			// Check if the method accepts parameters
-			$reflection     = new \ReflectionMethod($class, $function);
-			$numberOfParams = $reflection->getNumberOfParameters();
-			if ($numberOfParams > 0 && $numberOfParams <= $paramCount) {
-				$argString = '(:args+)';
-			}
-
-			// Create the route
-			$routeArray = array_slice($uriValues, 0, count($namespacedURI));
-			$route      = '/' . implode('/', $routeArray) . '(/)' . $argString;
-
 		}
-
-		// Create the route
-		$this->create_route($route, $class, $function, $method);
-
 	}
 
 	// Create a route by passing in variables
