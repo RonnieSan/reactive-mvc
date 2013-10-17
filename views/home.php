@@ -5,7 +5,7 @@
 	<title>Home Page</title>
 </head>
 <body>
-	<h1>Welcome</h1>
+	<h1>Welcome, <?php echo $name;?></h1>
 	<p>This is the home page for your site.</p>
 </body>
 </html>

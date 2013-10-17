@@ -196,7 +196,7 @@ Class View extends \Slim\View
 		$this->appendData($this->params);
 
 		// Extract the Slim framework template variables
-		extract($this->data);
+		extract($this->getData());
 
 		// Render the HTML and save it to a variable
 		ob_start();

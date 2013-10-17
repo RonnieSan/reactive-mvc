@@ -10,7 +10,7 @@ Class Root extends \Reactive\Public_Controller
 
 	// The home page
 	public function index()	{
-		$this->app->render('home.php');
+		$this->app->render('home.php', array('name' => 'Ronnie'));
 	}
 
 }

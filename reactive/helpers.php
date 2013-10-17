@@ -91,9 +91,22 @@ function call_func($function, $args = array()) {
 
 }
 
+// Return a default value if a variable is not set
+function get_var(&$var, $default) {
+	if (!isset($var)) {
+		return $default;
+	}
+	return $var;
+}
+
 // Check if an array is associative
 function is_assoc($array) {
 	return (bool)count(array_filter(array_keys($array), 'is_string'));
+}
+
+// Turn an object to an associative array
+function to_array($object) {
+	return (array)$object;
 }
 
 // END MISC FUNCTIONS

@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Reactive Apps - Dashboard Login</title>
 	<link rel="stylesheet" href="/assets/themes/default/css/default.css">
+	<link rel="stylesheet" href="/assets/themes/default/css/login.css">
 </head>
 <body>
 	<div class="wrapper">

@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Reactive Apps Dashboard</title>
+	<title>Apps Overview - Reactive Apps</title>
+	<link rel="stylesheet" href="/assets/themes/default/css/default.css">
 	<link rel="stylesheet" href="/assets/themes/default/css/dashboard.css">
 </head>
-<body>
+<body id="page-dashboard">
 	<div class="wrapper">
 		
 		<?php $this->view->partial('admin/_partials/header.php');?>
@@ -14,8 +15,11 @@
 			
 			<?php $this->view->partial('admin/_partials/menu.php');?>
 
-			<div id="content">
-				<p>This is some content.</p>
+			<div id="stage">
+				<div class="content">
+					<h1>Dashboard</h1>
+					<p>Lorem ipsum dolor sit amet.</p>
+				</div>
 			</div>
 
 		</section>

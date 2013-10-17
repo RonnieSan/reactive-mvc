@@ -12,7 +12,7 @@
 			var settings = $.extend({
 
 				// Default Options
-				arrowContent : '<img src="http://checkmate.dev.mini/assets/reboot/img/select-arrow.gif">'
+				arrowContent : '<img src="/assets/reboot/img/select-arrow.gif">'
 
 			}, options);
 
@@ -121,11 +121,24 @@
 					.on('blur', function() {
 						data.wrapper.removeClass('focused');
 					})
+					.on('check', function() {
+						if ($this.is(':radio')) {
+							$('[name=' + $this.attr('name') + ']:radio').closest('.radio-wrapper').removeClass('checked');
+						}
+						$this.prop('checked', true);
+						data.wrapper.addClass('checked');
+					})
+					.on('uncheck', function() {
+						if ($this.is(':checkbox')) {
+							$this.prop('checked', false);
+							data.wrapper.removeClass('checked');
+						}
+					})
 					.on('click', function() {
+						if ($this.is(':radio')) {
+							$('[name=' + $this.attr('name') + ']:radio').closest('.radio-wrapper').removeClass('checked');
+						}
 						if ($this.is(':checked')) {
-							if ($this.is(':radio')) {
-								$('[name=' + $this.attr('name') + ']:radio').closest('.radio-wrapper').removeClass('checked');
-							}
 							data.wrapper.addClass('checked');
 						} else {
 							data.wrapper.removeClass('checked');

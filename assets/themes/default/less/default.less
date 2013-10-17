@@ -1,48 +1,233 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Montserrat:700);
 @import "../../../reboot/less/reboot";
 
-// --------------------------------------------------
-// LOGIN STYLES
-
-.static-modal {
-	border: 1px solid #E5E5E5;
-	margin: 50px auto 0;
-	width: 400px;
+html, body {
+	min-height: 100%;
+	width: 100%;
 }
 
-header.bar {
-	.gradient();
+body {
+	background-color: #ACACAC;
+}
+
+.wrapper {
+	min-height: 100%;
+	width: 100%
+}
+
+#header {
+	background-color: #252525;
+	color: #FFF;
 	height: 60px;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
 
-	h1 {
-		line-height: 60px;
-		padding: 0 20px;
+	.logo {
+		float: left;
+	}
+
+	.utility-nav {
+		float: right;
 	}
 }
 
-#form-login {
-	margin: 0;
-	padding: 20px 20px 10px;
+#main {
+	height: 100%;
+	margin-top: 60px;
 
-	.error-msg {
-		color: red;
-		font-style: italic;
-		font-weight: bold;
-		margin-bottom: 10px;
+	#menu {
+		background-color: #959595;
+		height: 100%;
+		position: fixed;
+		width: 250px;
+
+		nav {
+
+			> ul {
+				border-top: 1px solid #ACACAC;
+				margin: 90px 0 0;
+
+				a {
+					color: #FFF;
+					display: block;
+					font-size: 16px;
+					line-height: 60px;
+					min-height: 60px;
+					padding: 0 20px;
+
+					&:hover {
+						background-color: transparent;
+						border-right: 4px solid #FFF;
+						font-weight: bold;
+						text-decoration: none;
+					}
+				}
+
+				> li {
+					border-bottom: 1px solid #ACACAC;
+					margin: 0;
+
+					> ul {
+						border-top: 1px solid #ACACAC;
+						list-style-type: none;
+						margin: 0;
+						margin-left: 60px;
+						padding: 10px 0;
+
+						>li {
+							margin: 0;
+							padding: 0;
+
+							a {
+								color: #D2D2D2;
+								padding: 0 10px;
+								line-height: 40px;
+								min-height: 40px;
+
+								&:hover {
+									font-weight: bold;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			i {
+				float: left;
+				margin: 14px 15px 0 0;
+			}
+
+			li.nav-dashboard i {
+				.sprite('/assets/img/admin-icons.png', 0, 0, 32px, 32px);
+			}
+
+			li.nav-apps i {
+				.sprite('/assets/img/admin-icons.png', 40px, 0, 32px, 32px);
+			}
+
+			li.nav-docs i {
+				.sprite('/assets/img/admin-icons.png', 80px, 0, 32px, 32px);
+			}
+
+			li.nav-products i {
+				.sprite('/assets/img/admin-icons.png', 120px, 0, 32px, 32px);
+			}
+
+			li.nav-download-keys i {
+				.sprite('/assets/img/admin-icons.png', 240px, 0, 32px, 32px);	
+			}
+
+			li.nav-orders i {
+				.sprite('/assets/img/admin-icons.png', 160px, 0, 32px, 32px);
+			}
+
+			li.nav-settings i {
+				.sprite('/assets/img/admin-icons.png', 200px, 0, 32px, 32px);
+			}
+		}
 	}
 
-	input[type='text'],
-	input[type='password'] {
-		.box-shadow(inset 1px 1px 3px rgba(0,0,0,0.1));
-		background-color: #F5F5F5;
-		width: 200px;
-	}
+	#stage {
+		min-width: 800px;
+		padding: 20px 20px 20px 270px;
 
-	#form-login--submit-btn {
-		.btn.green;
-	}
+		> .content {
+			.box-shadow(3px 3px 0 rgba(0,0,0,0.05));
+			background-color: #FFF;
+			min-height: 600px;
+			padding: 30px;
 
+			h1 {
+				border-bottom: 1px solid #E2E2E2;
+				font-family: @fontHeading;
+				padding-bottom: 10px;
+			}
+
+			a.btn {
+				margin-bottom: 10px;
+			}
+		}
+	}
 }
 
+.textarea-wrapper {
+	width: 700px;
+}
 
-// END LOGIN STYLES
-// --------------------------------------------------
+textarea.code {
+	font-family: @fontMonospaced;
+	line-height: 20px;
+}
+
+input[type="text"],
+.select-wrapper {
+	width: 350px;
+}
+
+#form-edit--content {
+	height: 800px;
+}
+
+.checkbox-wrapper {
+	margin-top: 10px;
+}
+
+#page-dashboard .nav-dashboard,
+#page-apps .nav-apps,
+#page-docs .nav-docs,
+#page-products .nav-products,
+#page-download-keys .nav-download-keys,
+#page-orders .nav-orders,
+#page-settings .nav-settings {
+	background-color: #ACACAC;
+
+	a {
+		border-right: 0 !important;
+		font-weight: normal !important;
+	}
+}
+
+// TABLE STYLES
+.page-view {
+	table {
+		width: 100%;
+
+		th, td {
+			padding: 12px 15px !important;
+
+			&.centered {
+				text-align: center;
+			}
+
+			&.short {
+				width: 50px;
+			}
+		}
+
+		thead {
+			border: 1px solid #333;
+			
+			th {
+				background-color: #333;
+				color: #FFF;
+			}
+		}
+
+		tbody {
+			border: 1px solid #CCC;
+
+			td {
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+.btn:hover {
+	text-decoration: none;
+}

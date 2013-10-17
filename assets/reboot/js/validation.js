@@ -217,15 +217,24 @@ function luhn(s) {
 
 						// Bind the validation events
 						data.fields.each(function() {
-							$(this).on('keyup blur', methods.validate);
+							$(this).on('blur', methods.validate);
+						});
+						data.fields.filter(':not(:radio, :checkbox)').each(function() {
+							$(this).on('keyup', methods.validate);
 						});
 						data.fields.filter('select').each(function() {
 							$(this).on('change', methods.validate);
 						});
 						data.fields.filter(':radio, :checkbox').each(function() {
-							$(this).on('click', function() {
+							$(this).on('click', function(e) {
 								methods.validate.call(this);
 							});
+						});
+
+						$this.on('submit', function(e) {
+							if (!methods.exec.call(this)) {
+								e.preventDefault();
+							}
 						});
 					}
 
@@ -262,7 +271,9 @@ function luhn(s) {
 
 		},
 
-		validate : function(e) {
+		validate : function() {
+
+			var e = event;
 
 			if (e.type === 'keyup' && !$(this).hasClass('error')) {
 				return false;

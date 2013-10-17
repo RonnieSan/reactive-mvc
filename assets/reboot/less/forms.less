@@ -78,11 +78,16 @@ textarea {
 	border: 0;
 	font-family: @fontBodyCopy;
 	font-size: @sizeFontNormal;
+	height: 250px;
 	width: 100%;
 
 	&:focus {
 		border: 0;
 		outline: none;
+	}
+
+	&.code {
+		font-family: @fontMonospaced;
 	}
 }
 
@@ -139,7 +144,7 @@ label {
 .radio-wrapper, .checkbox-wrapper {
 	.border-box;
 	.inline-block();
-	background-image: url('../img/radio.png');
+	background-image: url('/assets/reboot/img/radio.png');
 	background-position: 0 0;
 	margin-right: 5px;
 	overflow: hidden;
@@ -170,7 +175,7 @@ label {
 }
 
 .checkbox-wrapper {
-	background-image: url('../img/checkbox.png');
+	background-image: url('/assets/reboot/img/checkbox.png');
 }
 
 input[type='button'],

@@ -3,33 +3,25 @@
 
 namespace Models;
 
-Class App extends \Reactive\Model
+Class App extends \Models\Model
 {
 	
-	public $columns = array('appID', 'appName', 'buyNowCode');
-	public $appID;
+	public $columns = array('ID', 'appName', 'slug');
+	public $ID;
 	public $appName;
-	public $buyNowCode;
+	public $slug;
 
-	public $table   = 'apps';
+	public $table = 'apps';
 
-	public function __construct($appID = NULL) {
+	public function __construct() {
 		parent::__construct();
-
-		if ($appID !== NULL) {
-			$this->load($appID);
-		}
 	}
 
-	// Load an app
-	public function load($appID) {
+	// Load an app by slug
+	public function load_by_slug($slug) {
 
 		// Build the query
-		if (is_numeric($appID)) {
-			$query = 'SELECT * FROM apps WHERE appID = ' . $appID;	
-		} else {
-			$query = 'SELECT * FROM apps WHERE appName = "' . $appID . '"';
-		}
+		$query = 'SELECT * FROM apps WHERE slug = "' . $slug . '"';
 
 		// Get the user with a matching username
 		$apps = $this->_db->query($query);
@@ -44,30 +36,6 @@ Class App extends \Reactive\Model
 		}
 
 		return FALSE;
-
-	}
-
-	// Save the user data
-	public function save() {
-
-		// Build the data array
-		foreach ($this->columns as $columnName) {
-			if (isset($this->$columnName)) {
-				$data[$columnName] = $this->$columnName;
-			}
-		}
-
-		// Update an existing record
-		if (!empty($this->appID)) {
-			$this->_db->update($this->table, $data, 'appID = ' . $this->appID);
-		}
-
-		// Insert a new record
-		else {
-			$this->_db->insert($this->table, $data);
-		}
-
-		return TRUE;
 
 	}
 }

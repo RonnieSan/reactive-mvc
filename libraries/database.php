@@ -106,14 +106,26 @@ Class Database
 	// Run a query
 	public function exec($query) {
 		$result = $this->_db->query($query);
-		$output = new Result($result);
 
-		return $output;
+		if ($result !== FALSE) {
+			$output = new Result($result);
+			return $output;
+		}
+
+		return FALSE;
 	}
 
 	// Alias for exec
 	public function query($query) {
 		return $this->exec($query);
+	}
+
+	// Get the error information
+	public function error() {
+		return array(
+			'code' => $this->_db->errorCode(),
+			'info' => $this->_db->errorInfo()
+		);
 	}
 
 	// Insert insert a single record
@@ -143,10 +155,14 @@ Class Database
 		$values = implode(',', $values);
 
 		// Execute the query
-		$this->_db->query("INSERT INTO {$table} ({$fields}) VALUES ({$values})");
+		$result = $this->_db->query("INSERT INTO {$table} ({$fields}) VALUES ({$values})");
 
 		// Return the ID of the row we just inserted
-		return $this->_db->lastInsertId();
+		if ($result != FALSE) {
+			return $this->_db->lastInsertId();
+		}
+
+		return FALSE;
 		
 	}
 
@@ -238,7 +254,11 @@ Class Database
 		$count = $this->_db->exec("UPDATE {$table} SET {$setters} WHERE {$where}");
 
 		// Return the number of rows affected
-		return $count;
+		if ($count > 0) {
+			return $count;
+		}
+
+		return FALSE;
 
 	}
 

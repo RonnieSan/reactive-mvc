@@ -8,7 +8,6 @@ Class App extends \Slim\Slim
 {
 
 	public $db;
-	public $view; // We need to make the view class public
 	
 	public function __construct($settings) {
 		parent::__construct($settings);
@@ -104,8 +103,7 @@ Class App extends \Slim\Slim
 
 	
 	// Register Slim's PSR-0 autoloader
-	public function register_autoloader()
-	{
+	public function register_autoloader() {
 		spl_autoload_register(__NAMESPACE__ . "\\App::autoload");
 	}
 	// END AUTOLOADER
@@ -135,73 +133,83 @@ Class App extends \Slim\Slim
 
 		// Use the root class unless something else matches
 		$class      = '\\Controllers\\' . $this->config('class.root');
+		$paramCount = -1;
 		$function   = 'index';
-		$paramCount = 0;
 		$argString  = '';
 
-		// Reduce the URI array
-		while (count($namespacedURI) > 0) {
-
-			// Check if the class exists
-			$namespacedClass = implode('\\', $namespacedURI);
-
-			if (class_exists('\\Controllers\\' . $namespacedClass)) {
-				$class = '\\Controllers\\' . $namespacedClass;
-				if ($this->_check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
-					break;
-				}
-			}
-
-			if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
-				$class = '\\Controllers\\' . $namespacedClass . '\\Root';
-				if ($this->_check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
-					break;
-				}
-			}
-
-			// Remove the last item in the array and add it to the args array
-			$function = array_pop($namespacedURI);
-			$paramCount++;
-
+		// Create a route for the root class if there are no URL parameters
+		if (count($namespacedURI) == 0) {
+			$this->_create_route_if_method_exists($class, 'index', $paramCount, $uriValues, $namespacedURI, $method);
 		}
 
+		// Run down the URL and check if we can find a class/function that matches
+		else {
+			$passCount = 1;
+			while (count($namespacedURI) > 0) {
+
+				// Create a class namespace from the URL segments
+				$namespacedClass = implode('\\', $namespacedURI);
+
+				// Create a route if a class/function exists
+				if (class_exists('\\Controllers\\' . $namespacedClass)) {
+					$class = '\\Controllers\\' . $namespacedClass;
+					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
+						break;
+					}
+					if ($this->_create_route_if_method_exists($class, 'index', $paramCount + 1, $uriValues, $namespacedURI, $method)) {
+						break;
+					}
+				}
+
+				// Create a route pointing to the Root class in a folder
+				if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
+					$class = '\\Controllers\\' . $namespacedClass . '\\Root';
+					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
+						break;
+					}
+				}
+
+				// Remove the last item in the array and use it as the function name in the next run
+				$function = strtolower(array_pop($namespacedURI));
+				$paramCount++;
+
+			}
+		}
 	}
 
 	// Check if a method exists and if the number of params matches
-	private function _check_method($class, $function, $paramCount, $uriValues, $namespacedURI, $method) {
+	private function _create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method) {
+
 		// Check if the first argument is a callable method
 		if (method_exists($class, $function)) {
-			
+
 			// Check if the method accepts parameters
 			$reflection        = new \ReflectionMethod($class, $function);
 			$numberOfParams    = $reflection->getNumberOfParameters();
 			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
-			$paramCount--;
 
 			$routeArray = array_slice($uriValues, 0, count($namespacedURI) + 1);
 			$route = '/' . implode('/', $routeArray) . '(/)';
 
-			// Check if there are params
+			// Check if it has the number of required params
 			if ($numberOfParams > 0) {
-				
-				// Check if it has the number of required params
 				if ($paramCount >= $numberOfReqParams && $paramCount <= $numberOfParams) {
+					
+					// Add arguments to the route
+					$route .= '(:args+)';
 
 					// Create the route
-					$route .= '(:args+)';
 					$this->create_route($route, $class, $function, $method);
 					return TRUE;
-
 				}
-
-			} else {
-
+			} elseif ($paramCount === 0) {
 				// Create the route
 				$this->create_route($route, $class, $function, $method);
 				return TRUE;
-
 			}
 		}
+
+		return FALSE;
 	}
 
 	// Create a route by passing in variables
