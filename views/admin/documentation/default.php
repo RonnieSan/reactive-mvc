@@ -47,7 +47,7 @@
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script>
 	$(function() {
-		$('tr').on('click', function() {
+		$('tbody').find('tr').on('click', function() {
 			location.href = $(this).attr('rel');
 		});
 	});

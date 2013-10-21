@@ -1,5 +1,5 @@
 <section id="header">
-	<div class="logo">Reactive Apps</div>
+	<div class="logo">reactive apps</div>
 	<div class="utility-nav">
 		<nav>
 			<ul class="inline">

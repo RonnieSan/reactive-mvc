@@ -144,7 +144,6 @@ Class App extends \Slim\Slim
 
 		// Run down the URL and check if we can find a class/function that matches
 		else {
-			$passCount = 1;
 			while (count($namespacedURI) > 0) {
 
 				// Create a class namespace from the URL segments
@@ -202,7 +201,7 @@ Class App extends \Slim\Slim
 					$this->create_route($route, $class, $function, $method);
 					return TRUE;
 				}
-			} elseif ($paramCount === 0) {
+			} elseif ($paramCount <= 0) {
 				// Create the route
 				$this->create_route($route, $class, $function, $method);
 				return TRUE;

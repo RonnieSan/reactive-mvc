@@ -27,20 +27,24 @@
 							<tr>
 								<th class="short centered">ID</th>
 								<th>Product Name</th>
-								<th>Slug</th>
-								<th class="centered">Price</th>
-								<th class="centered">Active</th>
+								<th>Key</th>
+								<th>Customer</th>
+								<th>Email</th>
+								<th class="centered">Download Count</th>
+								<th class="centered">Created On</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php foreach ($keys as $key) {?>
-								<!-- <tr rel="/admin/products/edit/<?php echo $product->ID;?>">
-									<td class="short centered"><?php echo $product->ID;?></td>
-									<td><?php echo $product->productName;?></td>
-									<td><?php echo $product->slug;?></td>
-									<td class="centered">$<?php echo $product->price;?></td>
-									<td class="centered"><?php if ($product->active == 1) echo '&bull;';?></td>
-								</tr> -->
+								<tr rel="/admin/download-keys/edit/<?php echo $key->ID;?>">
+									<td class="short centered"><?php echo $key->ID;?></td>
+									<td><?php echo $key->productName;?></td>
+									<td><?php echo $key->key;?></td>
+									<td><?php echo $key->customerName;?></td>
+									<td><?php echo $key->email;?></td>
+									<td class="centered"><?php echo $key->downloadCount;?></td>
+									<td class="centered"><?php echo date('M j, Y @ g:iA', strtotime($key->created));?></td>
+								</tr>
 							<?php }?>
 						</tbody>
 					</table>
@@ -55,7 +59,7 @@
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script>
 	$(function() {
-		$('tr').on('click', function() {
+		$('tbody').find('tr').on('click', function() {
 			location.href = $(this).attr('rel');
 		});
 	});

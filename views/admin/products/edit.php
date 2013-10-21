@@ -46,6 +46,13 @@
 							</div>
 						</div>
 
+						<div id="form-edit--cg--currency" class="control-group horizontal">
+							<label class="control-label">Currency:</label>
+							<div class="controls">
+								<input type="text" name="currency" class="text" id="form-edit--currency" value="<?php echo get_var($product['currency'], 'USD');?>" />
+							</div>
+						</div>
+
 						<div id="form-edit--cg--buyNowCode" class="control-group horizontal">
 							<label class="control-label">Buy Now Code:</label>
 							<div class="controls">

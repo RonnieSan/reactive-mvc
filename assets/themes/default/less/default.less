@@ -28,10 +28,32 @@ body {
 
 	.logo {
 		float: left;
+		font-family: Montserrat, 'Open Sans', Arial, Helvetica, Sans-serif;
+		font-size: 28px;
+		line-height: 50px;
+		margin-left: 20px;
 	}
 
 	.utility-nav {
 		float: right;
+		line-height: 60px;
+		margin-right: 30px;
+
+		a {
+			.rounded(30px);
+			background-color: #FFF;
+			color: #000;
+			font-size: 10px;
+			font-weight: bold;
+			padding: 5px 15px;
+			text-transform: uppercase;
+
+			&:hover {
+				background-color: #00AFEC;
+				color: #FFF;
+				text-decoration: none;
+			}
+		}
 	}
 }
 
@@ -49,7 +71,7 @@ body {
 
 			> ul {
 				border-top: 1px solid #ACACAC;
-				margin: 90px 0 0;
+				margin: 50px 0 0;
 
 				a {
 					color: #FFF;
@@ -118,12 +140,20 @@ body {
 				.sprite('/assets/img/admin-icons.png', 120px, 0, 32px, 32px);
 			}
 
+			li.nav-files i {
+				.sprite('/assets/img/admin-icons.png', 280px, 0, 32px, 32px);
+			}
+
 			li.nav-download-keys i {
 				.sprite('/assets/img/admin-icons.png', 240px, 0, 32px, 32px);	
 			}
 
 			li.nav-orders i {
 				.sprite('/assets/img/admin-icons.png', 160px, 0, 32px, 32px);
+			}
+
+			li.nav-customers i {
+				.sprite('/assets/img/admin-icons.png', 320px, 0, 32px, 32px);
 			}
 
 			li.nav-settings i {
@@ -181,8 +211,10 @@ input[type="text"],
 #page-apps .nav-apps,
 #page-docs .nav-docs,
 #page-products .nav-products,
+#page-files .nav-files,
 #page-download-keys .nav-download-keys,
 #page-orders .nav-orders,
+#page-customers .nav-customers,
 #page-settings .nav-settings {
 	background-color: #ACACAC;
 
@@ -230,4 +262,48 @@ input[type="text"],
 
 .btn:hover {
 	text-decoration: none;
+}
+
+// Validation Styles
+.form-error {
+	color: #F00;
+	font-style: italic;
+	margin-top: 3px;
+}
+
+// MODAL STYLES
+#modals {
+	display: none;
+}
+
+.modal-overlay {
+	.opacity(0.65);
+}
+
+.modal {
+	.rounded(5px);
+	overflow: hidden;
+}
+
+.basic-modal {
+
+	> header {
+		background-color: #3891DA;
+		height: 50px;
+		padding: 0 20px;
+
+		h2 {
+			color: #FFF;
+			line-height: 50px;
+		}
+	}
+
+	 .content {
+	 	background-color: #FFF;
+	 	padding: 20px;
+
+	 	form {
+	 		margin: 0;
+	 	}
+	 }
 }

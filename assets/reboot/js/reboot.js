@@ -62,7 +62,7 @@ $(function() {
 
 	// Make all form elements styleable
 	if (jQuery().reboot_forms) {
-		$().reboot_forms({ arrowContent: '<img src="/assets/reboot/img/select-arrow.gif">' });
+		$().reboot_forms({ arrowContent: '<div class="arrow"><img src="/assets/reboot/img/select-arrow.gif"></div>' });
 	}
 
 	// END FORM STYLING

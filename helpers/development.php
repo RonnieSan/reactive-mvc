@@ -1,11 +1,9 @@
 <?php
 
-// Get a value or return a default
-if (!function_exists('get_var')) {
-	function get_var(&$var, $default = NULL) {
-		if (!isset($var)) {
-			return $default;
-		}
-		return $var;
+// Generate a download key
+if (!function_exists('generate_key')) {
+	function generate_key($productID, $email) {
+		$key = md5('4UHH557' . $productID . $email);
+		return $key;
 	}
 }
