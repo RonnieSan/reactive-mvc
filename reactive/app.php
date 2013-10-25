@@ -155,7 +155,7 @@ Class App extends \Slim\Slim
 					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
 						break;
 					}
-					if ($this->_create_route_if_method_exists($class, 'index', $paramCount + 1, $uriValues, $namespacedURI, $method)) {
+					if ($this->_create_route_if_method_exists($class, 'index', $paramCount + 1, array_slice($uriValues, 0, count($namespacedURI)), $namespacedURI, $method)) {
 						break;
 					}
 				}

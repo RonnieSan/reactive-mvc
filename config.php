@@ -11,9 +11,9 @@ $config = array(
 	'db.default' => array(
 			'host'        => 'localhost',           // Host address for the database
 			'type'        => 'mysql',               // Type of database you're using (for PDO library)
-			'database'    => 'reactive_apps',       // Name of the database
-			'username'    => 'reactive_apps',       // Username for conencting to the database
-			'password'    => 'password1'            // Password for connecting to the database
+			'database'    => 'dbName',              // Name of the database
+			'username'    => 'username',            // Username for conencting to the database
+			'password'    => 'password'             // Password for connecting to the database
 		)
 
 );
