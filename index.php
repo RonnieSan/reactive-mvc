@@ -10,12 +10,10 @@ require 'Slim/Slim.php';
 // Include important reactive core files
 require 'reactive/helpers.php';
 require 'reactive/controller.php';
-require 'config.php';
+require 'application/config.php';
 
 // Instantiate a new app and register the Reactive autoloader
 $app = new \Reactive\App($config);
-$app->register_autoloader();
-
 
 // ------------------------------
 // APP CONSTANTS
@@ -50,10 +48,6 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
 // ------------------------------
 // ROUTES
-
-// Manual Routes
-// Include the list of manually set routes
-require 'routes.php';
 
 // Dynamic Routes
 // Auto-generate routes based on the URI

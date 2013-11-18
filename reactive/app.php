@@ -12,9 +12,17 @@ Class App extends \Slim\Slim
 	public function __construct($settings) {
 		parent::__construct($settings);
 
+		// Manual Routes
+		// Include the list of manually set routes
+		$app = $this;
+		require $settings['name'] . '/routes.php';
+
+		// Register the autoloader
+		$this->register_autoloader();
+
 		// Connect to the database
-		$this->db = new \Libraries\Database();
-		$this->db->connect();
+		// $this->db = new \Libraries\Database();
+		// $this->db->connect();
 
 		// Set the 404 page
 		$this->notFound(function() {
@@ -26,6 +34,8 @@ Class App extends \Slim\Slim
 	// AUTOLOADER
 	public static function autoload($className)
 	{
+
+		$app = \Slim\Slim::getInstance();
 
 		// Get the base directory
 		$baseDir = __DIR__;
@@ -44,7 +54,7 @@ Class App extends \Slim\Slim
 		}
 
 		$filePathArray = explode(DIRECTORY_SEPARATOR, $filePath);
-		$filePath      = '';
+		$filePath      = $app->config('name') . DIRECTORY_SEPARATOR;
 
 		// Check for an existing file path
 		foreach ($filePathArray as $segment) {
