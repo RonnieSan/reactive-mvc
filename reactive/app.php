@@ -162,9 +162,12 @@ Class App extends \Slim\Slim
 				// Create a route if a class/function exists
 				if (class_exists('\\Controllers\\' . $namespacedClass)) {
 					$class = '\\Controllers\\' . $namespacedClass;
+
+					// Check if the class exists with a named function
 					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
 						break;
 					}
+					// Check if the class exists with an index function
 					if ($this->_create_route_if_method_exists($class, 'index', $paramCount + 1, array_slice($uriValues, 0, count($namespacedURI)), $namespacedURI, $method)) {
 						break;
 					}
@@ -173,6 +176,8 @@ Class App extends \Slim\Slim
 				// Create a route pointing to the Root class in a folder
 				if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
 					$class = '\\Controllers\\' . $namespacedClass . '\\Root';
+
+					// Check if the root class exists with a named function
 					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
 						break;
 					}
@@ -182,6 +187,12 @@ Class App extends \Slim\Slim
 				$function = strtolower(array_pop($namespacedURI));
 				$paramCount++;
 
+			}
+
+			// Create a route pointing to the Root class and index function
+			if (class_exists('\\Controllers\\Root')) {
+				$class = '\\Controllers\\Root';
+				$this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method);
 			}
 		}
 	}
