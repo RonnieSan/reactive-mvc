@@ -12,10 +12,16 @@ Class App extends \Slim\Slim
 	public function __construct($settings) {
 		parent::__construct($settings);
 
-		// Manual Routes
-		// Include the list of manually set routes
+		// Create a temporary reference to the app
 		$app = $this;
+
+		// ROUTES
+		// Include the list of manually set routes
 		require $settings['name'] . '/routes.php';
+
+		// HOOKS
+		// Include a list of custom hooks
+		require $settings['name'] . '/hooks.php';
 
 		// Register the autoloader
 		$this->register_autoloader();
@@ -134,6 +140,11 @@ Class App extends \Slim\Slim
 		$uriValues = array_filter($uriValues, function($value) {return $value != '';});
 		$uriValues = array_values($uriValues);
 
+		// Check if the first segment matches the route.folder in the config
+		if (count($uriValues) > 0 && $uriValues[0] == $this->config('route.folder')) {
+			array_shift($uriValues);
+		}
+
 		// Create an array of properly formatted namespaces
 		$namespacedURI = array();
 
@@ -209,7 +220,8 @@ Class App extends \Slim\Slim
 			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
 
 			$routeArray = array_slice($uriValues, 0, count($namespacedURI) + 1);
-			$route = '/' . implode('/', $routeArray) . '(/)';
+			$route = '/' . $this->config('route.folder') . '/' . implode('/', $routeArray) . '(/)';
+			$route = str_replace('//', '/', $route);
 
 			// Check if it has the number of required params
 			if ($numberOfParams > 0) {
@@ -266,8 +278,8 @@ Class App extends \Slim\Slim
 	// Load a helper file
 	public function load_helper($fileName) {
 
-		if (file_exists(ROOT . "/helpers/{$fileName}.php")) {
-			include(ROOT . "/helpers/{$fileName}.php");
+		if (file_exists(ROOT . '/' . $this->config['name'] . "/helpers/{$fileName}.php")) {
+			include(ROOT . '/' . $this->config['name'] . "/helpers/{$fileName}.php");
 		}
 
 	}

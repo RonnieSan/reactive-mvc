@@ -10,10 +10,57 @@ require 'Slim/Slim.php';
 // Include important reactive core files
 require 'reactive/helpers.php';
 require 'reactive/controller.php';
-require 'application/config.php';
+require 'config.php';
 
-// Instantiate a new app and register the Reactive autoloader
-$app = new \Reactive\App($config);
+// ------------------------------
+// APPLICATION CONFIGS
+
+$appConfig1 = array(
+
+	'name'           => 'application',                // The application name
+	'route.folder'   => '',                           // The default folder for the app
+	'templates.path' => 'application/views', // What folder has all the views
+
+	// Databases
+	'db.default' => array(
+			'host'        => 'localhost',             // Host address for the database
+			'type'        => 'mysql',                 // Type of database you're using (for PDO library)
+			'database'    => 'dbName',                // Name of the database
+			'username'    => 'username',              // Username for conencting to the database
+			'password'    => 'password'               // Password for connecting to the database
+		)
+
+);
+
+$appConfig1 = array_merge($config, $appConfig1);
+
+
+$appConfig2 = array(
+
+	'name'           => 'admin',                      // The application name
+	'route.folder'   => 'admin',                           // The default folder for the app
+	'templates.path' => 'admin/views', // What folder has all the views
+
+	// Databases
+	'db.default' => array(
+			'host'        => 'localhost',             // Host address for the database
+			'type'        => 'mysql',                 // Type of database you're using (for PDO library)
+			'database'    => 'dbName',                // Name of the database
+			'username'    => 'username',              // Username for conencting to the database
+			'password'    => 'password'               // Password for connecting to the database
+		)
+
+);
+
+$appConfig2 = array_merge($config, $appConfig2);
+
+// END APPLICATION CONFIGS
+// ------------------------------
+
+// Instantiate new apps
+$apps   = array();
+$apps[] = new \Reactive\App($appConfig1);
+$apps[] = new \Reactive\App($appConfig2);
 
 // ------------------------------
 // APP CONSTANTS
@@ -47,15 +94,26 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
 
 // ------------------------------
-// ROUTES
+// RUN APPS
 
-// Dynamic Routes
-// Auto-generate routes based on the URI
-$app->generate_routes($app);
+foreach ($apps as $app) {
 
-// END ROUTES
+	if (!empty($app->config('route.folder'))) {
+
+		if (strpos($_SERVER['REQUEST_URI'], $app->config('route.folder')) === 1) {
+
+			$app->generate_routes($app);
+			$app->run();
+
+		}
+	} else {
+
+		$app->generate_routes($app);
+		$app->run();
+		
+	}
+
+}
+
+// END RUN APPS
 // ------------------------------
-
-
-// Run the application
-$app->run();
