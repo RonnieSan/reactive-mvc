@@ -41,13 +41,13 @@ require 'Slim/Slim.php';
 // -- HELPER FUNCTIONS --
 // Include the helper functions
 // Place all your helper functions in this file
-require 'Reactive/helpers.php';
+require 'Reactive/Helpers.php';
 
 // -- BASE CONTROLLER CLASSES --
 // You should extend all your controllers from the
 // controllers in this file.  You can also add your
 // own base controllers to this file.
-require 'Reactive/controller.php';
+require 'Reactive/Controller.php';
 
 // -- COMMON CONFIG SETTINGS --
 // Include a config file that will be merged with

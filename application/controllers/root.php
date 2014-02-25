@@ -13,4 +13,9 @@ Class Root extends \Reactive\Public_Controller
 		$this->app->render('home.php', array('name' => 'John Doe'));
 	}
 
+	// The home page
+	public function test($name = "Someone Else", $var = NULL)	{
+		$this->app->render('home.php', array('name' => $name));
+	}
+
 }

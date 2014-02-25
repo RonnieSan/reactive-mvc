@@ -9,11 +9,15 @@ Class View extends \Slim\View
 	protected $_js     = array('footer' => array());
 	protected $_meta   = array();
 
+	public $app;
 	public $params = array();
 	public $view;
 
 	public function __construct() {
 		parent::__construct();
+
+		// Get an instance of the app
+		$this->app = \Reactive\App::getInstance();
 
 		// Create a reference to the view
     	$this->view = $this;
@@ -102,7 +106,7 @@ Class View extends \Slim\View
 	// Javascript methods
 	
 	// Add a script to the _js array
-	public function add_js($js, $location = 'footer', $useTheme = TRUE) {
+	public function add_js($js, $location = 'footer') {
 		
 		// Wrap a string in an array
 		if (!is_array($js)) {
@@ -110,21 +114,13 @@ Class View extends \Slim\View
 		}
 
 		foreach ($js as $script) {
-			$this->_add_js($script, $location, $useTheme);
+			$this->_add_js($script, $location);
 		}
 	}
 
 	// Add a script to the _js array
-	protected function _add_js($script, $location = 'footer', $useTheme = TRUE) {
-		
-		// Check if you need to set a theme based on the variation
-		if ($useTheme) {
-			$script = "/assets/themes/{$this->params['theme']}/js/{$script}";
-		}
-		$script = str_replace('//', '/', $script);
-
+	protected function _add_js($script, $location = 'footer') {
 		$this->_js[$location][] = $script;
-		
 	}
 
 	// Print the script tags for the JS files
@@ -186,22 +182,38 @@ Class View extends \Slim\View
 	public function render($template) {
 
 		// Get the template path
-		$templatePath = $this->getTemplatesDirectory() . '/' . ltrim($template, '/');
+		$templatePathname = $this->getTemplatePathname($template);
 		
-		if (!file_exists($templatePath)) {
-			throw new \RuntimeException("View cannot render template '$templatePath' -- template does not exist.");
+		if (!file_exists($templatePathname)) {
+			throw new \RuntimeException("View cannot render template '$templatePathname' -- template does not exist.");
 		}
+
+		// --------------------------------------------------
+		// VIEW CONTROLLERS
+		// If you want to use a client-side MVC like
+		// Backbone, uncomment this section and it will
+		// automatically include a JS file with a name
+		// matching the view if it exists
+
+		$viewControllerScript = str_replace('.php', '.js', $templatePathname);
+		if (is_file($viewControllerScript)) {
+			$this->add_js($viewControllerScript, 'footer');
+		}
+		
+		// END VIEW CONTROLLERS
+		// --------------------------------------------------
 
 		// Set the view data with the params
 		$this->appendData($this->params);
 
 		// Extract the Slim framework template variables
-		extract($this->getData());
+		extract($this->data->all());
 
 		// Render the HTML and save it to a variable
 		ob_start();
-		require $templatePath;
-		$html = ob_get_clean();
+		require $templatePathname;
+		
+		return ob_get_clean();
 
 		// Return the rendered layout
 		return $html;

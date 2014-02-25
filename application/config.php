@@ -10,6 +10,7 @@ $appConfig1 = array(
 	'name'           => basename(__DIR__),            // The application name
 	'app.rootpath'   => '',                           // A root folder for all auto routes
 	'templates.path' => basename(__DIR__) . '/views', // What folder has all the views
+	'view.controller' => true,
 
 	// Databases
 	'db.default' => array(
