@@ -1,8 +1,11 @@
 <?php
-// REACTIVE FRAMEWORK
-// Core Functions
+// REACTIVE MVC
+// Helpers are functions you can call anywhere in your application
+// We don't use a namespace here so it exists in the global space
+// Call these functions with a peceding backslash
+// e.g. \call_func($someArg)
 
-// ------------------------------
+// --------------------------------------------------
 // MISC FUNCTIONS
 
 // Call an arbitrary function and pass variables to it
@@ -110,4 +113,4 @@ function to_array($object) {
 }
 
 // END MISC FUNCTIONS
-// ------------------------------
+// --------------------------------------------------

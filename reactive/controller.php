@@ -13,7 +13,8 @@ Class Controller
 	protected $args;
 
 	public function __construct() {
-		$this->app = \Reactive\App::getInstance();
+		$this->app  = \Reactive\App::getInstance();
+		$this->view =& $this->app->view;
 	}
 
 }

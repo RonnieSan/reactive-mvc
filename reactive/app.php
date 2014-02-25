@@ -12,9 +12,6 @@ Class App extends \Slim\Slim
 	public function __construct($settings) {
 		parent::__construct($settings);
 
-		// Create a temporary reference to the app
-		$app = $this;
-
 		// ROUTES
 		// Include the list of manually set routes
 		require $settings['name'] . '/routes.php';
@@ -71,18 +68,6 @@ Class App extends \Slim\Slim
 				continue;
 			}
 
-			// Try the segment with dashes
-			if (is_dir($baseDir . $filePath . str_replace('_', '-', $segment))) {
-				$filePath .= str_replace('_', '-', $segment) . DIRECTORY_SEPARATOR;
-				continue;
-			}
-
-			// Try the segment in lowercase
-			if (is_dir($baseDir . $filePath . strtolower($segment))) {
-				$filePath .= strtolower($segment) . DIRECTORY_SEPARATOR;
-				continue;
-			}
-
 			// Try the segment in lowercase with dashes
 			if (is_dir($baseDir . $filePath . str_replace('_', '-', strtolower($segment)))) {
 				$filePath .= str_replace('_', '-', strtolower($segment)) . DIRECTORY_SEPARATOR;
@@ -94,18 +79,6 @@ Class App extends \Slim\Slim
 		// Check if the unaltered file exists
 		if (file_exists($filePath . $className . '.php')) {
 			require_once $filePath . $className . '.php';
-			return;
-		}
-
-		// Check if the dashed file exists
-		if (file_exists($filePath . str_replace('_', '-', $className) . '.php')) {
-			require_once $filePath . str_replace('_', '-', $className) . '.php';
-			return;
-		}
-
-		// Check if the lowercase file exists
-		if (file_exists($filePath . strtolower($className) . '.php')) {
-			require_once $filePath . strtolower($className) . '.php';
 			return;
 		}
 
@@ -140,8 +113,8 @@ Class App extends \Slim\Slim
 		$uriValues = array_filter($uriValues, function($value) {return $value != '';});
 		$uriValues = array_values($uriValues);
 
-		// Check if the first segment matches the route.folder in the config
-		if (count($uriValues) > 0 && $uriValues[0] == $this->config('route.folder')) {
+		// Check if the first segment matches the app.rootpath in the config
+		if (count($uriValues) > 0 && $uriValues[0] == $this->config('app.rootpath')) {
 			array_shift($uriValues);
 		}
 
@@ -220,7 +193,7 @@ Class App extends \Slim\Slim
 			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
 
 			$routeArray = array_slice($uriValues, 0, count($namespacedURI) + 1);
-			$route = '/' . $this->config('route.folder') . '/' . implode('/', $routeArray) . '(/)';
+			$route = '/' . $this->config('app.rootpath') . '/' . implode('/', $routeArray) . '(/)';
 			$route = str_replace('//', '/', $route);
 
 			// Check if it has the number of required params

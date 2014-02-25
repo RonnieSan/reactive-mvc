@@ -2,6 +2,10 @@
 // --------------------------------------------------
 // REACTIVE MVC
 // ©2014 by Reactive Apps
+// 
+// Use this index file if you have different apps
+// that are located in different sub-domains
+// 
 // --------------------------------------------------
 
 
@@ -58,7 +62,8 @@ require 'config.php';
 // APPLICATION-SPECIFIC CONFIGS
 // Require ALL your application configs here
 
-require 'application/config.php';
+require 'application1/config.php';
+require 'application2/config.php';
 
 // END APPLICATION-SPECIFIC CONFIGS
 // --------------------------------------------------
@@ -69,8 +74,8 @@ require 'application/config.php';
 // Create an apps array and pass each of your app
 // configs into new apps in the array
 
-$apps   = array();
-$apps[] = new \Reactive\App($appConfig1);
+$app1 = new \Reactive\App($appConfig1);
+$app2 = new \Reactive\App($appConfig2);
 
 // END INSTANTIATE YOUR APPLICATIONS
 // --------------------------------------------------
@@ -117,34 +122,25 @@ define('ENVIRONMENT', 'development');
 
 
 // --------------------------------------------------
-// RUN APPS (SUB-FOLDERS)
+// RUN APPS (SUB-DOMAINS)
 // Use this code block if you are separating your
-// apps based on sub-folders
+// apps based on sub-domains
 
-foreach ($apps as $app) {
+// Doing it this way, you can use sub-domains that include a .
+// i.e. site.stage.local.whatever
+if (strpos($_SERVER['HTTP_HOST'], 'someSubDomain') === 0) {
 
-	// If the route folder for the app isn't empty...
-	if (!empty($app->config('app.rootpath'))) {
+	// Run the Reactive Routing Engine
+	$app1->generate_routes($app1);
+	$app1->run();
 
-		// Check if the route folder matches the first part of the URI...
-		if (strpos($_SERVER['REQUEST_URI'], $app->config('app.rootpath')) === 1) {
+}
 
-			// Run the Reactive Routing Engine
-			$app->generate_routes($app);
-			$app->run();
+if (strpos($_SERVER['HTTP_HOST'], 'someOtherSubDomain') === 0) {
 
-		}
-
-	}
-
-	// Run the root application
-	else {
-
-		// Run the Reactive Routing Engine
-		$app->generate_routes($app);
-		$app->run();
-		
-	}
+	// Run the Reactive Routing Engine
+	$app2->generate_routes($app2);
+	$app2->run();
 
 }
 
