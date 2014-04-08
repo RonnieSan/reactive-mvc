@@ -126,24 +126,40 @@ Class App extends \Slim\Slim
 		}
 
 		// Use the root class unless something else matches
-		$class      = '\\Controllers\\' . $this->config('class.root');
-		$paramCount = -1;
+		$paramCount = 0;
 		$function   = 'index';
 		$argString  = '';
 
-		// Create a route for the root class if there are no URL parameters
-		if (count($namespacedURI) == 0) {
-			$this->_create_route_if_method_exists($class, 'index', $paramCount, $uriValues, $namespacedURI, $method);
+		// No URI was passed
+		if (count($namespacedURI) === 0) {
+			// There's no URI, try the root class
+			if (class_exists('\\Controllers\\' . $this->config('class.root'))) {
+				$class = '\\Controllers\\' . $this->config('class.root');
+
+				// Check if the root class exists with a named function
+				$this->_create_route_if_method_exists($class, 'index', 0, array(), $namespacedURI, $method);
+			}
 		}
 
-		// Run down the URL and check if we can find a class/function that matches
+		// Parse through the URI
 		else {
 			while (count($namespacedURI) > 0) {
 
 				// Create a class namespace from the URL segments
 				$namespacedClass = implode('\\', $namespacedURI);
 
-				// Create a route if a class/function exists
+				// Check if the folder exists with a root class
+				if (class_exists('\\Controllers\\' . $namespacedClass . '\\' . $this->config('class.root'))) {
+					$class = '\\Controllers\\' . $namespacedClass . '\\' . $this->config('class.root');
+
+					// Check if the root class exists with a named function
+					// We're checking if the index function exists in the first pass
+					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
+						break;
+					}
+				}
+
+				// Check if the class exists with an index or named function
 				if (class_exists('\\Controllers\\' . $namespacedClass)) {
 					$class = '\\Controllers\\' . $namespacedClass;
 
@@ -151,32 +167,28 @@ Class App extends \Slim\Slim
 					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
 						break;
 					}
+
 					// Check if the class exists with an index function
 					if ($this->_create_route_if_method_exists($class, 'index', $paramCount + 1, array_slice($uriValues, 0, count($namespacedURI)), $namespacedURI, $method)) {
 						break;
 					}
 				}
 
-				// Create a route pointing to the Root class in a folder
-				if (class_exists('\\Controllers\\' . $namespacedClass . '\\Root')) {
-					$class = '\\Controllers\\' . $namespacedClass . '\\Root';
-
-					// Check if the root class exists with a named function
-					if ($this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method)) {
-						break;
-					}
+				// Add one to the param count after the first iteration
+				if ($function !== 'index') {
+					$paramCount++;
 				}
 
 				// Remove the last item in the array and use it as the function name in the next run
 				$function = strtolower(array_pop($namespacedURI));
-				$paramCount++;
-
 			}
 
-			// Create a route pointing to the Root class and index function
-			if (class_exists('\\Controllers\\Root')) {
-				$class = '\\Controllers\\Root';
+			// Nothing matched, try the Root class with parameters
+			if (class_exists('\\Controllers\\' . $this->config('class.root'))) {
+				$class = '\\Controllers\\' . $this->config('class.root');
+
 				$this->_create_route_if_method_exists($class, $function, $paramCount, $uriValues, $namespacedURI, $method);
+				$this->_create_route_if_method_exists($class, 'index', $paramCount + 1, array_slice($uriValues, 0, count($namespacedURI)), $namespacedURI, $method);
 			}
 		}
 	}
