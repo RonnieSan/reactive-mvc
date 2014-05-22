@@ -34,7 +34,7 @@ Class Model
 			}
 			$obj->registerFields($fields);
 			array_unshift($args, $obj);
-			return call_user_func_array($method, $args);
+			return \call_func($method, $args);
 	    }
 	}
 
@@ -104,6 +104,30 @@ class Facade
 	}
 
 	function __call($method, $args) {
-		return call_user_func_array(array($this->object, $method), $args);
+		return \call_func(array($this->object, $method), $args);
 	}
 }
+
+// --------------------------------------------------
+// REGISTERING A NEW METHOD
+
+/*
+
+// Define your method...
+function someMethodName($obj, $arg1, $arg2, $arg3) {
+	// Use $obj instead of $this within the method
+	echo $this->property;
+	echo $arg1;
+}
+
+// Register the method...
+Model::registerMethod('someMethodName');
+
+// Calling your method
+$instance = new Model();
+$instance->someMethodName(1, 2, 3);
+
+*/
+
+// END REGISTERING A NEW METHOD
+// --------------------------------------------------

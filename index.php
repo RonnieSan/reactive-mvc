@@ -39,12 +39,6 @@ require 'Slim/Slim.php';
 // Place all your helper functions in this file
 require 'Reactive/Helpers.php';
 
-// -- BASE CONTROLLER CLASSES --
-// You should extend all your controllers from the
-// controllers in this file.  You can also add your
-// own base controllers to this file.
-require 'Reactive/Controller.php';
-
 // -- COMMON CONFIG SETTINGS --
 // Include a config file that will be merged with
 // your app-specific configs.
@@ -65,18 +59,6 @@ require 'application/config.php';
 
 
 // --------------------------------------------------
-// INSTANTIATE YOUR APPLICATIONS
-// Create an apps array and pass each of your app
-// configs into new apps in the array
-
-$apps   = array();
-$apps[] = new \Reactive\App($appConfig1);
-
-// END INSTANTIATE YOUR APPLICATIONS
-// --------------------------------------------------
-
-
-// --------------------------------------------------
 // CONSTANTS
 // Set your application constants here
 
@@ -87,9 +69,21 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 // -- ENVIRONMENT --
 // Change the way stuff works based on the current
 // environment you're working in
-define('ENVIRONMENT', 'development');
+$environment = d($_SERVER['environment'], 'development');
+define('ENVIRONMENT', $environment);
 
 // END CONSTANTS
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// INSTANTIATE YOUR APPLICATIONS
+// Create an apps array and pass each of your app
+// configs into new apps in the array
+
+$app = new \Reactive\App($config);
+
+// END INSTANTIATE YOUR APPLICATIONS
 // --------------------------------------------------
 
 
@@ -117,36 +111,12 @@ define('ENVIRONMENT', 'development');
 
 
 // --------------------------------------------------
-// RUN APPS (SUB-FOLDERS)
+// RUN APPS
 // Use this code block if you are separating your
-// apps based on sub-folders
 
-foreach ($apps as $app) {
+// Run the Reactive Routing Engine
+$app->generate_routes($app);
+$app->run();
 
-	// If the route folder for the app isn't empty...
-	if (!empty($app->config('app.rootpath'))) {
-
-		// Check if the route folder matches the first part of the URI...
-		if (strpos($_SERVER['REQUEST_URI'], $app->config('app.rootpath')) === 1) {
-
-			// Run the Reactive Routing Engine
-			$app->generate_routes($app);
-			$app->run();
-
-		}
-
-	}
-
-	// Run the root application
-	else {
-
-		// Run the Reactive Routing Engine
-		$app->generate_routes($app);
-		$app->run();
-		
-	}
-
-}
-
-// END RUN APPS (SUB-FOLDERS)
+// END RUN APPS
 // --------------------------------------------------

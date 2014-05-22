@@ -4,41 +4,32 @@ namespace Models;
 Class Model extends \Reactive\Model
 {
 
-	public $columns = array();
-	public $ID;
+	public $data = array();
+	public $id;
 	public $table;
 
-	public function __construct($ID = NULL) {
+	public function __construct($id = NULL) {
 		parent::__construct();
 
-		if ($ID !== NULL) {
-			$this->ID = $ID;
-			$this->load();
+		if ($id !== NULL) {
+			$this->id = $id;
+			$this->fetch();
 		}
 	}
 
 	// Set object properties from array
 	public function create($data) {
-		foreach ($data as $key => $value) {
-			if (in_array($key, $this->columns)) {
-				$this->$key = $value;
-			}
-		}
+		$this->data = $data;
+	}
+
+	public function test() {
+		echo $this->_curl('http://www.reactivemvc.dev/test');
 	}
 
 	// Load the object from the database
-	public function load() {
-		if (!empty($this->ID)) {
-			$result = $this->_db->query('SELECT * FROM ' . $this->table . ' WHERE ID = ' . $this->ID);
-			$object = $result->fetch();
-
-			if (is_array($object)) {
-				foreach ($this->columns as $column) {
-					$this->$column = $object[$column];
-				}
-
-				return TRUE;
-			}
+	public function fetch() {
+		if (!empty($this->id)) {
+			
 		}
 
 		return FALSE;
@@ -47,36 +38,44 @@ Class Model extends \Reactive\Model
 	// Save the object to the database
 	public function save() {
 
-		$data = array();
-
-		foreach ($this->columns as $column) {
-			$data[$column] = $this->$column;
-		}
-
-		if (!empty($this->ID)) {
-			$result = $this->_db->update($this->table, $data, 'ID = ' . $this->ID);
-		} else {
-			unset($data['ID']);
-			$result = $this->_db->insert($this->table, $data);
-		}
-
-		if ($result !== FALSE) {
-			return TRUE;
-		}
-
-		return FALSE;
-
 	}
 
 	// Delete the object from the database
 	public function delete() {
-		$result = $this->_db->delete($this->table, 'ID = ' . $this->ID);
+		
+	}
 
-		if ($result > 0) {
-			return TRUE;
+	protected function _curl($url, $method = 'GET', $data = NULL) {
+
+		//  Initiate curl
+		$ch = curl_init();
+
+		// Disable SSL verification
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+		// Will return the response, if false it print the response
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+		// Follow and location headers
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
+		// Set the post data if applicable
+		if ($data !== NULL) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		}
 
-		return FALSE;
+		// Set the url
+		curl_setopt($ch, CURLOPT_URL, $url);
+
+		// Execute
+		$result = curl_exec($ch);
+
+		// Close the curl connection
+		curl_close($ch);
+
+		// Return the result
+		return $result;
+
 	}
 
 }

@@ -23,7 +23,7 @@ Class View extends \Slim\View
     	$this->view = $this;
     }
 
-	// ------------------------------
+	// --------------------------------------------------
 	// Meta tag methods
 
 	// Add a meta field
@@ -61,10 +61,10 @@ Class View extends \Slim\View
 	}
 
 	// End meta tag methods
-	// ------------------------------
+	// --------------------------------------------------
 
 
-	// ------------------------------
+	// --------------------------------------------------
 	// Stylesheet methods
 
 	// Add stylesheets to the _css array
@@ -99,10 +99,10 @@ Class View extends \Slim\View
 	}
 
 	// End stylesheet methods
-	// ------------------------------
+	// --------------------------------------------------
 
 
-	// ------------------------------
+	// --------------------------------------------------
 	// Javascript methods
 	
 	// Add a script to the _js array
@@ -133,14 +133,14 @@ Class View extends \Slim\View
 	}
 
 	// End javascript methods
-	// ------------------------------
+	// --------------------------------------------------
 
 
-	// ------------------------------
+	// --------------------------------------------------
 	// Param methods
 
 	// Set the params for the view
-	public function set_params($key, $value = NULL, $default = NULL) {
+	public function set($key, $value = NULL, $default = NULL) {
 		if (is_array($key)) {
 			foreach($key as $k => $v){
 				$this->params[$k] = $v;
@@ -155,7 +155,7 @@ Class View extends \Slim\View
 	}
 
 	// Return the params
-	public function get_params($key = NULL) {
+	public function get($key = NULL) {
 		if (is_null($key)) {
 			return $this->params;
 		} else {
@@ -167,10 +167,10 @@ Class View extends \Slim\View
 	}
 
 	// End param methods
-	// ------------------------------
+	// --------------------------------------------------
 
 
-	// ------------------------------
+	// --------------------------------------------------
 	// Render methods
 	
 	// Render a partial
@@ -190,14 +190,15 @@ Class View extends \Slim\View
 
 		// --------------------------------------------------
 		// VIEW CONTROLLERS
-		// If you want to use a client-side MVC like
-		// Backbone, uncomment this section and it will
-		// automatically include a JS file with a name
-		// matching the view if it exists
+		// If you want to use a client-side framework
+		// like Angular, uncomment this section and it
+		// will automatically include a JS file with a
+		// name matching the view if it exists
 
-		$viewControllerScript = str_replace('.php', '.js', $templatePathname);
-		if (is_file($viewControllerScript)) {
-			$this->add_js($viewControllerScript, 'footer');
+		$scriptPathname = $this->getTemplatePathname(str_replace('.php', '.js', $template), $this->scriptFolder);
+
+		if (is_file($scriptPathname)) {
+			$this->add_js(str_replace(ROOT, '', $scriptPathname), 'footer');
 		}
 		
 		// END VIEW CONTROLLERS
@@ -221,6 +222,6 @@ Class View extends \Slim\View
 	}
 
 	// End render methods
-	// ------------------------------
+	// --------------------------------------------------
 
 }

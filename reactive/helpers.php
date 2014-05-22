@@ -95,7 +95,7 @@ function call_func($function, $args = array()) {
 }
 
 // Return a default value if a variable is not set
-function get_var(&$var, $default) {
+function d(&$var, $default) {
 	if (!isset($var)) {
 		return $default;
 	}
