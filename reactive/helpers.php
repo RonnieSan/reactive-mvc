@@ -10,7 +10,6 @@
 
 // Call an arbitrary function and pass variables to it
 // This is needed because call_user_func_array is terribly slow
-
 function call_func($function, $args = array()) {
 
 	// Count the number of arguments passed in

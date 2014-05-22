@@ -3,7 +3,7 @@
 namespace Controllers;
 
 // Extend this class for password-protected pages
-Class Private_Controller extends \Reactive\Controller
+abstract Class Private_Controller extends \Reactive\Controller
 {
 
 	public function __construct() {
