@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-Class Model extends \Reactive\Model
+class Model extends \Reactive\Model
 {
 
 	public $columns = array();

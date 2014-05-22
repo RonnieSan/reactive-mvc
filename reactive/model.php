@@ -1,7 +1,7 @@
 <?php
 namespace Reactive;
 
-abstract Class Model
+abstract class Model
 {
 
 	public $app;

@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-abstract Class Model extends \Reactive\Model
+abstract class Model extends \Reactive\Model
 {
 
 	public $data = array();

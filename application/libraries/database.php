@@ -2,7 +2,7 @@
 namespace Libraries;
 
 // This class handles connecting to and querying a database
-Class Database
+class Database
 {
 
 	public $app;

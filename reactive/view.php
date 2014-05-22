@@ -2,7 +2,7 @@
 
 namespace Reactive;
 
-Class View extends \Slim\View
+class View extends \Slim\View
 {
 
 	protected $_css    = array();

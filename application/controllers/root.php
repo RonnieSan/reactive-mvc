@@ -1,7 +1,7 @@
 <?php
 namespace Controllers;
 
-Class Root extends \Controllers\Public_Controller
+class Root extends \Controllers\Public_Controller
 {
 
 	public function __construct($app) {

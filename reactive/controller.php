@@ -4,7 +4,7 @@
 
 namespace Reactive;
 
-abstract Class Controller
+abstract class Controller
 {
 
 	public $view;

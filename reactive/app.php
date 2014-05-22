@@ -4,7 +4,7 @@
 
 namespace Reactive;
 
-Class App extends \Slim\Slim
+class App extends \Slim\Slim
 {
 	
 	public function __construct($settings) {

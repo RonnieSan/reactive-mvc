@@ -3,7 +3,7 @@
 
 namespace Models;
 
-Class User extends \Models\Model
+class User extends \Models\Model
 {
 	public function __construct() {
 		parent::__construct();
