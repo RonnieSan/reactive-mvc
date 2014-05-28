@@ -1,8 +1,8 @@
 <?php
-namespace Libraries;
+namespace Database;
 
 // This class handles connecting to and querying a database
-class Database
+class Connection
 {
 
 	public $app;
@@ -37,22 +37,15 @@ class Database
 	}
 
 	// Connect to the database
-	public function connect($host = NULL, $database = NULL, $username = NULL, $password = NULL, $type = 'mysql') {
+	public function connect($config) {
 
 		// Get the settings from the config if nothing was passed in
-		if ($host === NULL) {
-			$host = $this->app->config('db.default');
+		if ($config === NULL) {
+			$config = $this->app->config('db');
 		}
 
 		// Set the DB options
-		if (is_array($host)) {
-			$dbConfig = $host;
-			$type     = $dbConfig['type'];
-			$host     = $dbConfig['host'];
-			$database = $dbConfig['database'];
-			$username = $dbConfig['username'];
-			$password = $dbConfig['password'];
-		}
+		extract($config);
 
 		try {
 
@@ -84,7 +77,7 @@ class Database
 
 	}
 
-	// Close the databse connection
+	// Close the database connection
 	public function close() {
 		$this->_db = NULL;
 	}
@@ -96,11 +89,6 @@ class Database
 		$mode = strtoupper($mode);
 		$this->_db->setAttribute(\PDO::ATTR_ERRMODE, constant("\PDO::ERRMODE_{$mode}"));
 		
-	}
-
-	// Create a new query builder
-	public function query_builder() {
-		return new Query();
 	}
 
 	// Run a query
@@ -307,60 +295,6 @@ class Database
 
 		}
 
-	}
-
-}
-
-// The result class
-Class Result
-{
-
-	private $_result;
-
-	public function __construct($result) {
-		$this->_result = $result;
-	}
-
-	// Return the results as an array
-	// Types can be ASSOC|BOTH|CLASS|OBJ|LAZY|NUM|FUNC
-	public function fetch_all($type = 'ASSOC', $obj = NULL) {
-
-		// Set the type
-		$type = constant("PDO::FETCH_{$type}");
-
-		if ($type == 8) {
-			if ($obj === NULL) {
-				$obj = 'stdClass';
-			}
-
-			return $this->_result->fetchAll($type, $obj);
-		} else {
-			unset($obj);
-		}
-		
-		return $this->_result->fetchAll($type);
-	}
-
-	// Fetch the next row of the results
-	public function fetch($type = 'ASSOC', $obj = NULL) {
-
-		if ($type == 'CLASS' && $obj !== NULL) {
-			$this->_result->setFetchMode(8, $obj);
-		}
-
-		$type = constant("PDO::FETCH_{$type}");
-		return $this->_result->fetch($type);
-
-	}
-
-	// Get the total number of columns
-	public function column_count() {
-		return $this->_result->columnCount();
-	}
-
-	// Free the result resource
-	public function free() {
-		$this->_result = NULL;
 	}
 
 }

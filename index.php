@@ -1,4 +1,6 @@
 <?php
+$start = microtime();
+
 // --------------------------------------------------
 // REACTIVE MVC
 // ©2014 by Reactive Apps
@@ -120,3 +122,5 @@ $app->run();
 
 // END RUN APPS
 // --------------------------------------------------
+
+var_dump(microtime() - $start);

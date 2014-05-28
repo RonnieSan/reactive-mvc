@@ -3,10 +3,10 @@ namespace Models;
 
 abstract class Model extends \Reactive\Model
 {
-
-	public $data = array();
 	public $id;
-	public $table;
+	public $data = array();
+
+	protected $_table;
 
 	public function __construct($id = NULL) {
 		parent::__construct();
@@ -17,9 +17,25 @@ abstract class Model extends \Reactive\Model
 		}
 	}
 
-	// Set object properties from array
-	public function create($data) {
-		$this->data = $data;
+	// Return a reference to the app object
+	protected function app() {
+		return \Reactive\App::getInstance();
+	}
+
+	// Set object properties
+	public function set($data, $value = NULL) {
+		if (!is_array($data)) {
+			$data = array($data => $value);
+		}
+
+		foreach ($data as $key->$value) {
+			$this->data[$key] = $value;
+		}
+	}
+
+	// Get an object property
+	public function get($key) {
+		return d($this->data[$key], NULL);
 	}
 
 	// Load the object from the database

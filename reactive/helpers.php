@@ -111,5 +111,13 @@ function to_array($object) {
 	return (array)$object;
 }
 
+// Extend an array
+function array_extend(&$primaryArray, $secondaryArray) {
+	$primaryArray = array_merge($primaryArray, $secondaryArray);
+	if (!is_assoc($primaryArray)) {
+		$primaryArray = array_unique($primaryArray);
+	}
+}
+
 // END MISC FUNCTIONS
 // --------------------------------------------------

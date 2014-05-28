@@ -10,23 +10,26 @@ class App extends \Slim\Slim
 	public function __construct($settings) {
 		parent::__construct($settings);
 
+		// Create a reference to the 
+		$app = $this;
+
 		// ROUTES
 		// Include the list of manually set routes
-		require $settings['app.folder'] . '/routes.php';
+		require $settings['app_folder'] . '/routes.php';
 
 		// HOOKS
 		// Include a list of custom hooks
-		require $settings['app.folder'] . '/hooks.php';
+		require $settings['app_folder'] . '/hooks.php';
 
 		// Register the autoloader
 		$this->register_autoloader();
 
 		// Define the application root
-		define('APP_ROOT', ROOT . DIRECTORY_SEPARATOR . $settings['app.folder']);
+		define('APP_ROOT', ROOT . DIRECTORY_SEPARATOR . $settings['app_folder']);
 
 		// Set the 404 page
 		$this->notFound(function() use ($settings) {
-			$this->render($settings['404.template']);
+			$this->render($settings['404_template']);
 		});
 	}
 
@@ -108,8 +111,6 @@ class App extends \Slim\Slim
 	// AUTOLOADER
 	public static function reactive_autoload($className) {
 
-		// *** Comments assume \Libraries\ClassName is being auto-loaded ***
-
 		// Get an instance of the app object
 		$app = \Slim\Slim::getInstance();
 
@@ -119,7 +120,6 @@ class App extends \Slim\Slim
 
 		// Set the last segment as the class name
 		$className = array_pop($segments);
-
 		
 		// --------------------------------------------------
 		// TRY VARIATIONS OF NAMING CONVENTIONS
@@ -127,8 +127,8 @@ class App extends \Slim\Slim
 		// This section allows you to use different naming conventions for your file structure
 		// i.e. /Libraries/SomeClass, /Libraries/Some_Class, etc.
 
-		$basePaths[]   = $app->config('app.folder');
-		$basePaths     = array_merge($basePaths, $app->config('app.parents'));
+		$basePaths[]   = $app->config('app_folder');
+		$basePaths     = array_merge($basePaths, $app->config('app_parents'));
 		$basePaths[]   = 'core';
 
 		$baseFolders   = array('', 'Libraries' . DIRECTORY_SEPARATOR, 'libraries' . DIRECTORY_SEPARATOR);
@@ -207,9 +207,9 @@ class App extends \Slim\Slim
 
 		// Get the URI
 		$uri     = $request->getResourceUri();
-		$rootURI = $this->config('app.rooturi');
+		$rootURI = $this->config('app_uri');
 
-		// Check if the first segment matches the app.rooturi in the config
+		// Check if the first segment matches the app_uri in the config
 		if (!empty($rootURI) && strpos($uri, $rootURI) == 0) {
 			$uri = substr($uri, strlen($rootURI));
 		}
@@ -231,7 +231,7 @@ class App extends \Slim\Slim
 		$nsParams = array();
 
 		// Get the name of the default class from the config file
-		$defaultClass = $this->config('class.default');
+		$defaultClass = $this->config('default_class');
 
 		// Loop through the URI segments looking for a valid route
 		while ($nsUriSegments) {
@@ -288,7 +288,7 @@ class App extends \Slim\Slim
 			$numberOfParams    = $reflection->getNumberOfParameters();
 			$numberOfReqParams = $reflection->getNumberOfRequiredParameters();
 
-			$route = '/' . $this->config('app.rooturi') . '/' . implode('/', $uriSegments) . '(/)';
+			$route = '/' . $this->config('app_uri') . '/' . implode('/', $uriSegments) . '(/)';
 			$route = str_replace('//', '/', $route);
 
 			$paramCount = count($params);
@@ -349,19 +349,30 @@ class App extends \Slim\Slim
 	// LOADER FUNCTIONS
 
 	// Load a helper file
-	public function load_helpers($fileName) {
+	public function load_helpers($fileNames) {
 
-		$basePaths[] = $this->config('app.folder');
-		$basePaths   = array_merge($basePaths, $this->config('app.parents'));
+		// Wrap a single path in an array
+		if (!is_array($fileNames)) {
+			$fileNames = array($fileNames);
+		}
+
+		$basePaths[] = $this->config('app_folder');
+		$basePaths   = array_merge($basePaths, $this->config('app_parents'));
 		$basePaths[] = 'core';
 
-		$directories = array('helpers', 'Helpers');
+		$directories = array('Helpers', 'helpers');
 
-		foreach ($basePaths as $basePath) {
-			foreach ($directories as $directory) {
-				$filePath = $basePath . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . $fileName . '.php';
-				if (is_file($filePath)) {
-					require_once $filePath;
+		foreach ($fileNames as $fileName) {
+			foreach ($basePaths as $basePath) {
+				foreach ($directories as $directory) {
+					$filePath = $basePath . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . $fileName . '.php';
+					if (is_file($filePath)) {
+						require_once $filePath;
+						if ($fileName == end($fileNames)) {
+							return;
+						}
+						break 2;
+					}
 				}
 			}
 		}
@@ -380,8 +391,8 @@ class App extends \Slim\Slim
 		if (!is_null($status)) {
 			$this->response->status($status);
 		}
-		$this->view->scriptFolder = $this->config('app.scripts');
-		$this->view->setTemplatesDirectory($this->config('templates.path'));
+		$this->view->scriptFolder = $this->config('scripts_folder');
+		$this->view->setTemplatesDirectory($this->config('views_folder'));
 		$this->view->appendData($data);
 		$this->view->display($template);
 	}

@@ -7,15 +7,15 @@
  
 $config = array(
 
-	'app.name'       => 'My Application',                // The application name
-	'app.folder'     => basename(__DIR__),               // A root folder for all auto routes
-	'app.rooturi'    => '',                              // The root URI folder for the app
-	'app.parents'    => array(),                         // An array of app folders that the autoloader falls back on
-	'app.scripts'    => basename(__DIR__) . '/scripts',  // The folder containing the client-side framework scripts
-	'templates.path' => basename(__DIR__) . '/views',    // What folder has all the views
+	'app_name'       => 'My Application',                // The application name
+	'app_folder'     => basename(__DIR__),               // A root folder for all auto routes
+	'app_parents'    => array(),                         // An array of app folders that the autoloader falls back on
+	'app_uri'        => '',                              // The root URI folder for the app
+	'scripts_folder' => basename(__DIR__) . '/Scripts',  // The folder containing the client-side framework scripts
+	'views_folder'   => basename(__DIR__) . '/Views',    // What folder has all the views
 
 	// Databases
-	'db.default' => array(
+	'db' => array(
 			'host'        => 'localhost',                // Host address for the database
 			'type'        => 'mysql',                    // Type of database you're using (for PDO library)
 			'database'    => 'myDatabase',               // Name of the database
