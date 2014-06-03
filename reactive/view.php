@@ -179,7 +179,7 @@ class View extends \Slim\View
 	}
 
 	// Render a view file
-	public function render($template) {
+	public function render($template, $data = NULL) {
 
 		// Get the template path
 		$templatePathname = $this->getTemplatePathname($template);
@@ -208,7 +208,8 @@ class View extends \Slim\View
 		$this->appendData($this->params);
 
 		// Extract the Slim framework template variables
-		extract($this->data->all());
+		$data = array_merge($this->data->all(), (array)$data);
+        extract($data);
 
 		// Render the HTML and save it to a variable
 		ob_start();
