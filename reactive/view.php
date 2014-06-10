@@ -125,7 +125,7 @@ class View extends \Slim\View
 
 	// Print the script tags for the JS files
 	public function print_js($location = 'footer') {
-		if(key_exists($location, $this->_js)){
+		if (isset($this->_js[$location])) {
 			foreach ($this->_js[$location] as $script) {
 				echo '<script src="' . $script . '"></script>' . PHP_EOL;
 			}
