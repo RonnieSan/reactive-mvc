@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.3.0
+ * @version     2.4.2
  * @package     Slim
  *
  * MIT LICENSE
@@ -113,6 +113,7 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
         415 => '415 Unsupported Media Type',
         416 => '416 Requested Range Not Satisfiable',
         417 => '417 Expectation Failed',
+        418 => '418 I\'m a teapot',
         422 => '422 Unprocessable Entity',
         423 => '423 Locked',
         //Server Error 5xx
@@ -480,7 +481,7 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * DEPRECATION WARNING! IteratorAggreate interface will be removed from \Slim\Http\Response.
+     * DEPRECATION WARNING! IteratorAggregate interface will be removed from \Slim\Http\Response.
      * Iterate `headers` or `cookies` properties directly.
      *
      * Get Iterator
